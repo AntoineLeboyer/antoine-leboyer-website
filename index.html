@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antoine Leboyer — Entrepreneur, Speaker &amp; Board Member · Munich</title>
+
+  <!-- ── SEO Meta ── -->
+  <meta name="description" content="Antoine Leboyer — Managing Director of TUM Venture Lab (Software &amp; AI), keynote speaker on entrepreneurship and AI, startup mentor, advisor, podcast host, and board member. Based in Munich." />
+  <meta name="author" content="Antoine Leboyer" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://friendly-duckanoo-114aae.netlify.app/" />
+
+  <!-- ── Open Graph (LinkedIn, WhatsApp, Facebook previews) ── -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="Antoine Leboyer — Entrepreneur, Speaker &amp; Board Member" />
+  <meta property="og:description" content="Managing Director of TUM Venture Lab · Keynote speaker on entrepreneurship and AI · Host of Entrepreneurial Realities podcast · Harvard Business School case study subject." />
+  <meta property="og:url" content="https://friendly-duckanoo-114aae.netlify.app/" />
+  <meta property="og:image" content="https://friendly-duckanoo-114aae.netlify.app/portrait.jpg" />
+  <meta property="og:image:width" content="800" />
+  <meta property="og:image:height" content="1067" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="profile:first_name" content="Antoine" />
+  <meta property="profile:last_name" content="Leboyer" />
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Antoine Leboyer — Entrepreneur, Speaker &amp; Board Member" />
+  <meta name="twitter:description" content="Managing Director of TUM Venture Lab · Keynote speaker on entrepreneurship and AI · Host of Entrepreneurial Realities podcast." />
+  <meta name="twitter:image" content="https://friendly-duckanoo-114aae.netlify.app/portrait.jpg" />
+
+  <!-- ── Structured Data (JSON-LD Person) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Antoine Leboyer",
+    "jobTitle": "Managing Director, TUM Venture Lab (Software & AI)",
+    "description": "Entrepreneur, keynote speaker on entrepreneurship and AI, podcast host, board member, and Harvard Business School case study subject. Based in Munich.",
+    "url": "https://friendly-duckanoo-114aae.netlify.app/",
+    "image": "https://friendly-duckanoo-114aae.netlify.app/portrait.jpg",
+    "sameAs": [
+      "https://www.linkedin.com/in/antoineleboyer/",
+      "https://open.spotify.com/show/1r0vpcIZomm9W7ozp3qWLV"
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "TUM Venture Lab",
+      "url": "https://www.unternehmertum.de/angebote/tum-venture-labs"
+    },
+    "alumniOf": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "Harvard Business School"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "name": "Centrale-Supélec"
+      }
+    ],
+    "knowsAbout": ["Entrepreneurship", "Artificial Intelligence", "Venture Building", "Software", "Startups", "Podcast", "Startup Mentoring", "Deep Tech", "LLM", "AI Chatbot", "Strategic Advisory", "Board Governance"],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Munich",
+      "addressCountry": "DE"
+    }
+  }
+  </script>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      color: #1a1a2e;
+      background: #fafaf8;
+      line-height: 1.7;
+    }
+
+    /* ── Typography ── */
+    h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+    h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+    p  { margin-bottom: 1rem; }
+    a  { color: inherit; text-decoration: none; }
+
+    /* ── Colours ── */
+    :root {
+      --navy:   #1a1a2e;
+      --gold:   #c9973a;
+      --cream:  #fafaf8;
+      --mid:    #f0ede6;
+      --light:  #7a7a8a;
+      --border: #ddd8ce;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+    }
+    .nav-logo {
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── Hero ── */
+    #hero {
+      background: var(--navy);
+      color: #fff;
+      padding: 5rem 2rem 5rem;
+    }
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    #hero h1 { color: #fff; margin-bottom: 1.4rem; }
+    .hero-tagline {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta { display: inline-flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-photo-wrap { position: relative; }
+    .hero-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: grayscale(8%);
+    }
+    .hero-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--gold);
+      transform: translate(10px, 10px);
+      z-index: -1;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 2px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--gold); color: #fff; border: 2px solid var(--gold); }
+    .btn-primary:hover { background: #b5852e; border-color: #b5852e; }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.5); }
+    .btn-outline:hover { border-color: #fff; }
+
+    /* ── Sections ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .section-label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .divider { width: 48px; height: 3px; background: var(--gold); margin: 1.2rem 0 2.5rem; }
+
+    /* ── Logo Bar ── */
+    #logos {
+      background: var(--navy);
+      padding: 2rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .logos-label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .logos-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem 3rem;
+    }
+    .logo-pill {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    /* ── About + News combined layout ── */
+    .about-news-outer {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-news-outer .about-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .news-sidebar-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ── News cards ── */
+    .news-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-badge {
+      display: inline-block;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+      margin-bottom: 0.9rem;
+      align-self: flex-start;
+    }
+    .news-badge-upcoming { background: var(--gold); color: #fff; }
+    .news-badge-news     { background: var(--navy); color: #fff; }
+    .news-card-meta {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+    }
+    .news-card h3 { font-size: 1rem; line-height: 1.4; margin-bottom: 0.5rem; }
+    .news-card p  { font-size: 0.875rem; color: var(--light); flex-grow: 1; margin-bottom: 1.25rem; }
+    .news-card-link {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      align-self: flex-start;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .news-card-link:hover { color: #b5852e; border-color: #b5852e; }
+    @media (max-width: 680px) { .news-grid { grid-template-columns: 1fr; } }
+
+    /* ── About ── */
+    #about { background: var(--cream); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p { color: #333; }
+    .about-facts { display: flex; flex-direction: column; gap: 1.4rem; }
+    .fact-item { border-left: 3px solid var(--gold); padding-left: 1rem; }
+    .fact-item .fact-label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 0.2rem;
+    }
+    .fact-item .fact-value { font-size: 0.95rem; font-weight: 600; }
+
+    /* ── Roles ── */
+    #roles { background: var(--mid); }
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .role-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 1.75rem 1.5rem;
+      border-top: 3px solid var(--gold);
+    }
+    .role-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+    .role-card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .role-card p { font-size: 0.88rem; color: var(--light); margin: 0; }
+
+    /* ── Speaking ── */
+    #speaking { background: var(--cream); }
+    .talks-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+    .talk-item {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1rem;
+      align-items: start;
+      padding: 1.25rem 1.5rem;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+    .talk-number { font-family: 'Helvetica Neue', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--gold); padding-top: 0.15rem; }
+    .talk-title  { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .talk-sub    { font-size: 0.85rem; color: var(--light); margin: 0; }
+    .fee-box {
+      background: var(--navy);
+      color: #fff;
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .fee-box .fee-label  { font-family: 'Helvetica Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+    .fee-box .fee-amount { font-size: 1.6rem; font-weight: 700; margin-top: 0.2rem; }
+
+    /* ── Videos ── */
+    #videos { background: var(--mid); }
+    .yt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .yt-card { background: #fff; border: 1px solid var(--border); overflow: hidden; }
+
+    /* Click-to-play thumbnail */
+    .yt-thumb {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: #000;
+      cursor: pointer;
+    }
+    .yt-thumb img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s;
+    }
+    .yt-thumb:hover img { opacity: 0.85; }
+    .yt-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      background: rgba(0,0,0,0.72);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      transition: background 0.2s;
+    }
+    .yt-thumb:hover .yt-play { background: #c00; }
+    .yt-play::after {
+      content: '';
+      border-style: solid;
+      border-width: 9px 0 9px 18px;
+      border-color: transparent transparent transparent #fff;
+      margin-left: 4px;
+    }
+    /* Embed replaces thumbnail on click */
+    .yt-thumb.playing { padding-bottom: 56.25%; }
+    .yt-thumb.playing img,
+    .yt-thumb.playing .yt-play { display: none; }
+    .yt-thumb iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+
+    .yt-info { padding: 1rem 1.1rem 1.2rem; }
+    .yt-tag {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.35rem;
+    }
+    .yt-info h3 { font-size: 0.88rem; line-height: 1.4; }
+
+    /* ── Podcast ── */
+    #podcast { background: var(--cream); }
+    .podcast-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      background: var(--navy);
+      color: #fff;
+      padding: 3rem;
+    }
+    .podcast-card h3 { font-size: 1.5rem; color: #fff; margin-bottom: 0.75rem; }
+    .podcast-card p  { color: rgba(255,255,255,0.7); margin-bottom: 1.25rem; }
+    .podcast-stats   { display: flex; gap: 2rem; margin-bottom: 1.5rem; }
+    .stat-num { font-size: 2rem; font-weight: 700; color: var(--gold); display: block; }
+    .stat-lab { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+    .podcast-visual { display: flex; align-items: center; justify-content: center; font-size: 6rem; opacity: 0.8; }
+
+    /* ── Virtual Hravuta ── */
+    #hravuta { background: var(--mid); }
+    .hravuta-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .hravuta-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #fff;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .hravuta-quote {
+      border-left: 3px solid var(--gold);
+      padding-left: 1.25rem;
+      font-style: italic;
+      color: var(--light);
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* ── Classical Music (demoted — compact note) ── */
+    #music { background: var(--cream); padding: 3rem 2rem; }
+    .music-note {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      background: var(--mid);
+      border-left: 3px solid var(--gold);
+      padding: 1.5rem 2rem;
+    }
+    .music-note-icon { font-size: 2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .music-note-text h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .music-note-text p  { font-size: 0.88rem; color: var(--light); margin: 0; }
+
+    /* ── Books ── */
+    #books { background: var(--mid); }
+    .books-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .book-card { background: #fff; border: 1px solid var(--border); padding: 2rem 1.75rem; border-top: 3px solid var(--gold); }
+    .book-card .book-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+    /* ── Board ── */
+    #board { background: var(--cream); }
+    .board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
+    .board-item { padding: 1.25rem 1.5rem; border: 1px solid var(--border); background: #fff; }
+    .board-item h3 { font-size: 0.95rem; }
+    .board-item p  { font-size: 0.82rem; color: var(--light); margin: 0; }
+
+    /* ── Writing ── */
+    #writing { background: var(--cream); }
+    .writing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+    .writing-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s;
+    }
+    .writing-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+    .writing-card-date {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+    }
+    .writing-card h3 { font-size: 1rem; line-height: 1.4; margin-bottom: 0.5rem; }
+    .writing-card-excerpt { font-size: 0.875rem; color: var(--light); flex-grow: 1; margin-bottom: 1.25rem; }
+    .writing-card-link {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      align-self: flex-start;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 1px;
+      transition: color 0.2s;
+    }
+    .writing-card-link:hover { color: #b5852e; border-color: #b5852e; }
+    .writing-card.writing-hidden { display: none; }
+    .writing-cta { margin-top: 2rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    @media (max-width: 680px) { .writing-grid { grid-template-columns: 1fr; } }
+
+    /* ── Contact ── */
+    #contact { background: var(--navy); color: #fff; }
+    #contact h2 { color: #fff; }
+    #contact .divider { margin: 1.2rem 0 2.5rem; }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-intro p { color: rgba(255,255,255,0.65); margin-bottom: 1.25rem; }
+    .contact-email-link {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      word-break: break-all;
+    }
+    .contact-social { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .contact-social a {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.45rem 1rem;
+      transition: all 0.2s;
+    }
+    .contact-social a:hover { color: var(--gold); border-color: var(--gold); }
+    /* Contact Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-form label {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      font-family: 'Georgia', serif;
+      font-size: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 2px;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: rgba(255,255,255,0.25); }
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus { border-color: var(--gold); }
+    .contact-form select option { background: var(--navy); color: #fff; }
+    .contact-form textarea { resize: vertical; min-height: 110px; }
+    .contact-form .btn-submit {
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-radius: 2px;
+      align-self: flex-start;
+    }
+    .contact-form .btn-submit:hover { background: #b5852e; }
+
+    /* ── Footer ── */
+    footer {
+      background: #111;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      padding: 1.5rem;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.78rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .about-news-outer { grid-template-columns: 1fr; }
+      .about-news-outer .about-grid { grid-template-columns: 1fr; }
+      .about-grid, .hravuta-inner, .podcast-card, .hero-inner, .contact-grid, .hbs-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .hero-photo-wrap { order: -1; max-width: 260px; margin: 0 auto; }
+      .podcast-visual { display: none; }
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.75rem; }
+      section { padding: 3.5rem 1.25rem; }
+      .fee-box { flex-direction: column; }
+      .music-note { flex-direction: column; gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <span class="nav-logo">Antoine Leboyer</span>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#speaking">Speaking</a>
+    <a href="#videos">Videos</a>
+    <a href="#podcast">Podcast</a>
+    <a href="#hbs-cases">HBS Cases</a>
+    <a href="#writing">Writing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Entrepreneur · Mentor · Speaker · Board Member</p>
+      <h1>Antoine Leboyer</h1>
+      <p class="hero-tagline">
+        Managing Director at TUM Venture Lab · AI innovator ·
+        Sought-after speaker on entrepreneurship, AI and technology.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">Get in Touch</a>
+        <a href="#speaking" class="btn btn-outline">View Talks</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <img src="portrait.jpg" alt="Antoine Leboyer" />
+    </div>
+  </div>
+</section>
+
+<!-- ── Logo Bar ── -->
+<div id="logos">
+  <p class="logos-label">As seen at</p>
+  <div class="logos-row">
+    <span class="logo-pill">TEDx Geneva</span>
+    <span class="logo-pill">DLD Conference</span>
+    <span class="logo-pill">TU Munich</span>
+    <span class="logo-pill">Harvard Business School</span>
+    <span class="logo-pill">TNG Consulting</span>
+    <span class="logo-pill">Global Shapers · WEF</span>
+    <span class="logo-pill">Kesher Day Genève</span>
+  </div>
+</div>
+
+<!-- ── About + News ── -->
+<section id="about">
+  <div class="container">
+    <div class="about-news-outer">
+
+      <!-- LEFT: About -->
+      <div>
+        <p class="section-label">About</p>
+        <h2>A career at the intersection of tech, venture &amp; culture</h2>
+        <div class="divider"></div>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              Antoine Leboyer is the Managing Director of the Munich Technical University
+              Venture Lab for Software and Artificial Intelligence, where he advises over
+              a hundred university-led startups.
+            </p>
+            <p>
+              From 2008 to 2020 he served as President and CEO of the Swiss software group
+              <strong>GSX</strong>, leading it through international expansion until its
+              acquisition by Martello Technology. His entrepreneurial journey became the
+              subject of a <strong>Harvard Business School case study</strong> — taught
+              in MBA programmes worldwide.
+            </p>
+            <p>
+              He is the creator of <strong>Virtual Hravuta</strong> — a Torah-focused AI chatbot —
+              and a member of the boards of both tech companies and cultural organisations.
+              A classical music journalist at heart, he brings rare intellectual breadth
+              to every stage and boardroom.
+            </p>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
+              <a href="#contact" class="btn btn-primary">Get in Touch</a>
+              <a href="#hbs-cases" class="btn" style="background:transparent; border:2px solid var(--gold); color:var(--gold);">HBS Cases →</a>
+            </div>
+          </div>
+          <div class="about-facts">
+            <div class="fact-item">
+              <div class="fact-label">Current role</div>
+              <div class="fact-value">Managing Director, TUM Venture Lab (Software &amp; AI)</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Previous</div>
+              <div class="fact-value">President &amp; CEO, GSX (2008–2020)</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Education</div>
+              <div class="fact-value">Centrale-Supélec · Harvard Business School (MBA)</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Harvard Business School</div>
+              <div class="fact-value">Subject of an HBS case study on entrepreneurship &amp; software M&amp;A</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Podcast</div>
+              <div class="fact-value">Entrepreneurial Realities — 90+ episodes, 15,000+ plays</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Books</div>
+              <div class="fact-value">Co-author of two books on sales strategy and market building</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">LinkedIn</div>
+              <div class="fact-value">
+                <a href="https://www.linkedin.com/in/antoineleboyer/" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">
+                  linkedin.com/in/antoineleboyer
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: News -->
+      <div>
+        <span id="news"></span>
+        <p class="section-label">News &amp; Upcoming</p>
+        <h2>Where to Find Antoine Next</h2>
+        <div class="divider"></div>
+        <div class="news-sidebar-grid">
+
+          <div class="news-card">
+            <span class="news-badge news-badge-upcoming">Upcoming</span>
+            <div class="news-card-meta">18–19 March 2026 · Stuttgart</div>
+            <h3>How to Get a Second Call with a VC</h3>
+            <p>Expert session (13:15–15:00, Wed 18 March) at the Stuttgart Migrant Accelerator two-day Kickoff — a programme empowering migrant founders to start up in Germany.</p>
+            <a class="news-card-link"
+               href="https://themigrantaccelerator.com/"
+               target="_blank" rel="noopener noreferrer">More info →</a>
+          </div>
+
+          <div class="news-card">
+            <span class="news-badge news-badge-upcoming">Upcoming</span>
+            <div class="news-card-meta">22 April 2026 · Munich</div>
+            <h3>AI in Europe: Foundations, Startups &amp; Digital Sovereignty</h3>
+            <p>Panel discussion at Institut français München, organised by Initiative Munich-Bordeaux. Antoine joins fellow experts for a bilingual evening on the foundations, uses, ethical issues and future of AI in Europe.</p>
+            <a class="news-card-link"
+               href="https://www.linkedin.com/feed/update/urn:li:activity:7429420868633665537/"
+               target="_blank" rel="noopener noreferrer">View announcement →</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Speaking ── -->
+<section id="speaking">
+  <div class="container">
+    <p class="section-label">Speaking</p>
+    <h2>Keynotes &amp; Talks</h2>
+    <div class="divider"></div>
+    <p style="color:var(--light); margin-bottom:2rem;">
+      Antoine delivers engaging, experience-driven talks for conferences, universities,
+      accelerators, and corporate events.
+    </p>
+    <div class="talks-list">
+      <div class="talk-item">
+        <span class="talk-number">01</span>
+        <div>
+          <div class="talk-title">What is Entrepreneurship?</div>
+          <p class="talk-sub">What are (really) the qualities of successful entrepreneurs?</p>
+        </div>
+      </div>
+      <div class="talk-item">
+        <span class="talk-number">02</span>
+        <div>
+          <div class="talk-title">I Have an Answer, Who Has a Question?</div>
+          <p class="talk-sub">How to get new technical innovations accepted by the market.</p>
+        </div>
+      </div>
+      <div class="talk-item">
+        <span class="talk-number">03</span>
+        <div>
+          <div class="talk-title">How to Get a Second Date with a VC?</div>
+          <p class="talk-sub">Learn how VCs operate and how to successfully pitch your startup.</p>
+        </div>
+      </div>
+      <div class="talk-item">
+        <span class="talk-number">04</span>
+        <div>
+          <div class="talk-title">Virtual Hravuta: Lessons from Building a Trustworthy AI Chatbot</div>
+          <p class="talk-sub">Entrepreneurial lessons from creating a focused LLM to study Torah.</p>
+        </div>
+      </div>
+      <div class="talk-item">
+        <span class="talk-number">05</span>
+        <div>
+          <div class="talk-title">Topic on Demand</div>
+          <p class="talk-sub">Tailored talk designed around your event's theme and audience.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <a href="#contact" class="btn btn-primary">Request a Talk</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Videos ── -->
+<section id="videos">
+  <div class="container">
+    <p class="section-label">Past Appearances</p>
+    <h2>Watch Antoine Speak</h2>
+    <div class="divider"></div>
+    <div class="yt-grid">
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="jy27YmbuJPA">
+          <img src="https://img.youtube.com/vi/jy27YmbuJPA/hqdefault.jpg" alt="TEDx Geneva" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2018 · TEDx Geneva University</div>
+          <h3>The Unexpected Magic of Running a Small Company</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="YVmxQck5w5c">
+          <img src="https://img.youtube.com/vi/YVmxQck5w5c/hqdefault.jpg" alt="IDE Award Keynote" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2021 · TU Munich IDE Award Keynote</div>
+          <h3>I Have an Answer, Who Has a Question?</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="DJqhvn9M3_I">
+          <img src="https://img.youtube.com/vi/DJqhvn9M3_I/hqdefault.jpg" alt="Big Techday 2023" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2023 · Big Techday · TNG Consulting</div>
+          <h3>Breaking Barriers: Unleashing the Power of AI Startups</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="_gOy2GokdeY">
+          <img src="https://img.youtube.com/vi/_gOy2GokdeY/hqdefault.jpg" alt="Mental Health & Entrepreneurship" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2023 · Global Shapers Community Munich</div>
+          <h3>Mental Health and Entrepreneurship</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="tZkJl2fk0rc">
+          <img src="https://img.youtube.com/vi/tZkJl2fk0rc/hqdefault.jpg" alt="DLD 2024" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2024 · DLD Conference</div>
+          <h3>Will Chatbots Replace Rabbis?</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="RC6SXHOTejM">
+          <img src="https://img.youtube.com/vi/RC6SXHOTejM/hqdefault.jpg" alt="Kesher Day Genève 2024" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">2024 · Kesher Day Genève</div>
+          <h3>Virtual Hravuta: L'IA au service de l'étude</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="EzU6eCBAtqs">
+          <img src="https://img.youtube.com/vi/EzU6eCBAtqs/hqdefault.jpg" alt="Key Principles of Entrepreneurship" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">Podcast · Entrepreneurial Realities Ep. 38</div>
+          <h3>Key Principles of Entrepreneurship</h3>
+        </div>
+      </div>
+
+      <div class="yt-card">
+        <div class="yt-thumb" data-id="wJJZf9gagUI">
+          <img src="https://img.youtube.com/vi/wJJZf9gagUI/hqdefault.jpg" alt="TUM Venture Lab" />
+          <div class="yt-play"></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-tag">TUM Venture Lab</div>
+          <h3>TUM Venture Lab for Software and Artificial Intelligence</h3>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Podcast ── -->
+<section id="podcast">
+  <div class="container">
+    <p class="section-label">Podcast</p>
+    <h2>Entrepreneurial Realities</h2>
+    <div class="divider"></div>
+    <div class="podcast-card">
+      <div>
+        <h3>Entrepreneurial Realities</h3>
+        <p>
+          The TUM Venture Lab podcast where Antoine interviews VCs, founders, and
+          academic leaders — delivering unfiltered conversations about what building
+          companies really looks like.
+        </p>
+        <div class="podcast-stats">
+          <div>
+            <span class="stat-num">90+</span>
+            <span class="stat-lab">Episodes</span>
+          </div>
+          <div>
+            <span class="stat-num">15K+</span>
+            <span class="stat-lab">Plays</span>
+          </div>
+        </div>
+        <a href="https://open.spotify.com/show/1r0vpcIZomm9W7ozp3qWLV" target="_blank" class="btn btn-primary">Listen Now</a>
+      </div>
+      <div class="podcast-visual">🎙️</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── What I Do ── -->
+<section id="roles">
+  <div class="container">
+    <p class="section-label">What I Do</p>
+    <h2>Four worlds, one perspective</h2>
+    <div class="divider"></div>
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-icon">🚀</div>
+        <h3>Venture Builder</h3>
+        <p>Mentoring 100+ university startups at TUM Venture Lab — from first idea to first funding.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🎙️</div>
+        <h3>Podcast Host</h3>
+        <p>Producer of <em>Entrepreneurial Realities</em>, featuring VCs, founders and academics.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🤖</div>
+        <h3>AI Innovator</h3>
+        <p>Creator of Virtual Hravuta, a focused LLM for Torah study — a live case study in responsible AI.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🎻</div>
+        <h3>Curious Mind</h3>
+        <p>Classical music journalist — because the best entrepreneurs are also the most curious humans.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Virtual Hravuta ── -->
+<section id="hravuta">
+  <div class="container">
+    <p class="section-label">AI Innovation</p>
+    <h2>Virtual Hravuta</h2>
+    <div class="divider"></div>
+    <div class="hravuta-inner">
+      <div>
+        <span class="hravuta-badge">AI · Torah · Product Design</span>
+        <p>
+          The <strong>Virtual Hravuta</strong> is an AI chatbot purpose-built to support
+          the study of Torah. Rather than a generic large language model, it is a
+          <em>focused</em> LLM — carefully scoped to a specific knowledge domain and
+          designed to be reliable and trustworthy.
+        </p>
+        <p>
+          Building it generated rich entrepreneurial lessons about product focus, user
+          trust, and the limits of AI — lessons Antoine now shares on stage worldwide,
+          including at the 2024 DLD Conference and Kesher Day Genève.
+        </p>
+        <blockquote class="hravuta-quote">
+          "Will chatbots replace rabbis?" — DLD Conference 2024
+        </blockquote>
+        <p style="margin-top:1.25rem;">
+          <a href="https://www.alumni.hbs.edu/stories/Pages/story-bulletin.aspx?num=9521"
+             target="_blank" rel="noopener noreferrer"
+             style="color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:1px; font-family:'Helvetica Neue',sans-serif; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;">
+            HBS Alumni Bulletin: "Deep Reading" →
+          </a>
+        </p>
+      </div>
+      <div>
+        <p style="font-size:0.92rem; color:var(--light);">
+          The project sits at the crossroads of technology, faith, and human connection —
+          raising fundamental questions about AI's role in preserving culture and
+          supporting learning communities.
+        </p>
+        <p style="font-size:0.92rem; color:var(--light);">
+          It is both a working product and a living case study in responsible AI product
+          development — demonstrating that the most impactful AI applications are often
+          the most constrained ones.
+        </p>
+        <a href="#contact" class="btn btn-primary" style="margin-top:0.5rem;">Invite Antoine to speak on this</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Classical Music (demoted) ── -->
+<section id="music">
+  <div class="music-note">
+    <div class="music-note-icon">🎻</div>
+    <div class="music-note-text">
+      <h3>Classical Music Journalist</h3>
+      <p>
+        Beyond the startup world, Antoine is an active classical music journalist covering
+        concerts and recordings across Europe. The best entrepreneurs, he believes, are also
+        the most curious humans — and great music is one of the best teachers of
+        structure, emotion and timing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Books ── -->
+<section id="books">
+  <div class="container">
+    <p class="section-label">Publications</p>
+    <h2>Books</h2>
+    <div class="divider"></div>
+    <div class="books-grid">
+      <div class="book-card">
+        <div class="book-icon">📘</div>
+        <h3>Optimiser votre stratégie commerciale</h3>
+        <p style="font-size:0.85rem; color:var(--light);">Co-écrit avec JC Malraison. Un guide pratique pour construire des stratégies commerciales efficaces pour les entreprises technologiques.</p>
+      </div>
+      <div class="book-card">
+        <div class="book-icon">📗</div>
+        <h3>Building Routes to Market</h3>
+        <p style="font-size:0.85rem; color:var(--light);">Co-written with JC Malraison and P Raulerson. A framework for taking technology products to international markets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Board ── -->
+<section id="board">
+  <div class="container">
+    <p class="section-label">Governance</p>
+    <h2>Board Experience</h2>
+    <div class="divider"></div>
+    <p style="color:var(--light); margin-bottom:2rem;">
+      Antoine brings operational experience as a CEO, deep sector knowledge in software
+      and AI, and an international perspective to board-level work.
+    </p>
+    <div class="board-grid">
+      <div class="board-item">
+        <h3>Hyperganic</h3>
+        <p>Munich-based deep-tech company</p>
+      </div>
+      <div class="board-item">
+        <h3>World Union for Progressive Judaism</h3>
+        <p>Global religious organisation · Member, International Leadership Committee</p>
+      </div>
+      <div class="board-item">
+        <h3>Geneva's Liberal Synagogue</h3>
+        <p>Cultural &amp; community institution · Former board member</p>
+      </div>
+      <div class="board-item">
+        <h3>Various Software Companies</h3>
+        <p>International portfolio of technology firms · Board roles</p>
+      </div>
+    </div>
+    <!-- Advisory Board -->
+    <p class="section-label" style="margin-top:3rem;">Advisory Board</p>
+    <div class="divider" style="margin-top:0.5rem;"></div>
+    <div class="board-grid">
+      <div class="board-item">
+        <h3><a href="https://www.qd-st.com/about-us" target="_blank" style="color:inherit;">Quantum Diamonds (QD)</a></h3>
+        <p>Next-gen semiconductor testing via diamond-based quantum sensing · TUM spin-out · Advisor</p>
+      </div>
+      <div class="board-item">
+        <h3><a href="https://www.sizekick.io/" target="_blank" style="color:inherit;">Sizekick</a></h3>
+        <p>AI-powered sizing for fashion e-commerce, reducing returns &amp; boosting conversion · Munich · First advisor &amp; supporter</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem; padding:2rem; background:var(--mid); border-left:3px solid var(--gold);">
+      <p style="margin:0; font-size:0.95rem;">
+        <strong>Open to new board positions</strong> — particularly in software, AI,
+        cultural institutions, and international organisations where a blend of
+        entrepreneurial, technical and humanistic perspective adds value.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HBS Cases ── -->
+<section id="hbs-cases" style="background:var(--navy); color:#fff; padding:4rem 2rem;">
+  <div class="container">
+    <p class="section-label" style="color:var(--gold);">Harvard Business School</p>
+    <h2 style="color:#fff;">A Career Worth Teaching</h2>
+    <div class="divider"></div>
+    <p style="color:rgba(255,255,255,0.65); max-width:620px; margin-bottom:2.5rem;">
+      Antoine's entrepreneurial journey at the helm of a Swiss software group became the
+      subject of a Harvard Business School case study — used in MBA programmes
+      worldwide to teach acquisition strategy, growth management and private equity.
+    </p>
+    <div style="max-width:560px;">
+      <a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=45734" target="_blank"
+         style="display:block; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-top:3px solid var(--gold); padding:1.75rem; text-decoration:none; transition:background 0.2s;"
+         onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+        <div style="font-family:'Helvetica Neue',sans-serif; font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem;">HBS Case 214-038 · 2013, revised 2023</div>
+        <h3 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">Antoine Leboyer and GSX</h3>
+        <p style="color:rgba(255,255,255,0.55); font-size:0.85rem; margin:0;">Charting the full arc from acquisition through the 2008–09 recession, international expansion and eventual sale to Martello Technology — taught in MBA programmes worldwide as a case study in entrepreneurial leadership.</p>
+        <span style="display:inline-block; margin-top:1rem; font-family:'Helvetica Neue',sans-serif; font-size:0.75rem; color:var(--gold); letter-spacing:0.08em; text-transform:uppercase;">View on HBS →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Writing ── -->
+<section id="writing">
+  <div class="container">
+    <p class="section-label">Writing</p>
+    <h2>Thoughts on Entrepreneurship &amp; AI</h2>
+    <div class="divider"></div>
+    <p style="color:var(--light); margin-bottom:2rem;">
+      A selection of posts and reflections published on LinkedIn — on venture building,
+      artificial intelligence, and the human side of startups.
+    </p>
+
+    <!-- WRITING POSTS — newest first
+      Add new cards at the top. Cards 1–6: class="writing-card"
+      Cards 7+: class="writing-card writing-hidden"
+    -->
+    <div class="writing-grid">
+
+      <!-- CARD 1 — newest -->
+      <div class="writing-card">
+        <div class="writing-card-date">March 2026 · AI &amp; Procurement</div>
+        <h3>$180 Billion on People. $10 Billion on Software. Something Is Broken.</h3>
+        <p class="writing-card-excerpt">
+          Companies spend over $180 billion per year on procurement talent and just $10 billion on software to support it. On Lio's $30M Series A led by a16z — and why AI agents are about to fix procurement's fundamental technology failure.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_companies-spend-over-180-billion-per-year-activity-7436097680600170496-tmrO"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 2 (was CARD 1) -->
+      <div class="writing-card">
+        <div class="writing-card-date">February 2025 · Defence &amp; Innovation</div>
+        <h3>Three Days. One City. Two Parallel Missions.</h3>
+        <p class="writing-card-excerpt">
+          During Munich Security Conference: the MSC Startup Hub and the European Defence Tech Hackathon ran side by side — proof that startups are now central, not peripheral, to European defence innovation.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_three-days-one-city-two-parallel-missions-activity-7430135017038790656-pUD4"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="writing-card">
+        <div class="writing-card-date">January 2025 · Gaming &amp; AI</div>
+        <h3>Game On: Why Every Company Needs a Gaming Strategy</h3>
+        <p class="writing-card-excerpt">
+          European games startups don't need to move to California. TUM Venture Lab just launched a dedicated gaming division — because gaming sits at the convergence of AI, immersive tech and narrative design.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_game-on-why-every-company-needs-a-gaming-activity-7424760156963651584-Stfr"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="writing-card">
+        <div class="writing-card-date">January 2025 · Leadership</div>
+        <h3>The Best Hires I Ever Made Looked Nothing Like Me</h3>
+        <p class="writing-card-excerpt">
+          They worked nothing like me and cared far less about the company than I did. And that's exactly why it worked. On the crucial difference between co-founders and employees.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_the-best-hires-i-ever-made-looked-nothing-activity-7421111665036881921-nzaS"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="writing-card">
+        <div class="writing-card-date">January 2025 · DLD Conference</div>
+        <h3>Three Days at DLD26 — Still Processing</h3>
+        <p class="writing-card-excerpt">
+          Reflections from Europe's premier innovation conference: Bill Gross on AI, defence tech, gaming, and the European ecosystem finding its voice.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_dld26-innovation-ai-activity-7418358881317347328-VrIL"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="writing-card">
+        <div class="writing-card-date">January 2025 · Culture</div>
+        <h3>Remembering the Early Days of Dilbert</h3>
+        <p class="writing-card-excerpt">
+          Scott Adams passed away. A personal tribute to the satirist who gave a generation of engineers and managers a mirror — and a story about a note I received from him in 1994.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_dilbert-workplaceculture-engineering-activity-7417204020345217024-LcxF"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARD 7 — hidden, revealed by Show More -->
+      <div class="writing-card writing-hidden">
+        <div class="writing-card-date">November 2024 · Deep Tech</div>
+        <h3>A Defining Moment for Quantum Diamonds</h3>
+        <p class="writing-card-excerpt">
+          Quantum Diamonds has the potential to revolutionise semiconductor testing via quantum sensing. Their €152M plan to build the world's first production facility of its kind — in Munich — marks a startup turning into a global player.
+        </p>
+        <a class="writing-card-link"
+           href="https://www.linkedin.com/posts/antoineleboyer_today-is-a-defining-moment-for-quantumdiamonds-activity-7406250414939111426--ITt"
+           target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+
+      <!-- CARDS 7+ — add writing-hidden class; revealed by Show More button -->
+      <!-- Example:
+      <div class="writing-card writing-hidden">
+        <div class="writing-card-date">Month Year · Topic</div>
+        <h3>Post title</h3>
+        <p class="writing-card-excerpt">Short excerpt.</p>
+        <a class="writing-card-link" href="YOUR_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">Read on LinkedIn &rarr;</a>
+      </div>
+      -->
+
+    </div><!-- /.writing-grid -->
+
+    <div class="writing-cta">
+      <button id="writing-show-more" class="btn btn-primary"
+              onclick="toggleWriting(this)">Show More Posts</button>
+      <a href="https://www.linkedin.com/in/antoineleboyer/"
+         target="_blank" rel="noopener noreferrer"
+         class="btn"
+         style="background:transparent; border:2px solid var(--gold); color:var(--gold);">
+        Follow on LinkedIn →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section id="contact">
+  <div class="container">
+    <p class="section-label" style="color:var(--gold);">Contact</p>
+    <h2>Let's Talk</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+
+      <div class="contact-intro">
+        <p>Available for speaking engagements, board positions, podcast collaborations, and strategic advisory.</p>
+        <div class="contact-social">
+          <a href="https://www.linkedin.com/in/antoineleboyer/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="#speaking">Book a Talk</a>
+          <a href="#board">Board Enquiries</a>
+          <a href="#podcast">Podcast</a>
+        </div>
+      </div>
+
+      <form class="contact-form"
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            action="/thank-you">
+        <!-- Netlify spam protection -->
+        <input type="hidden" name="form-name" value="contact" />
+        <p style="display:none;">
+          <label>Don't fill this out: <input name="bot-field" /></label>
+        </p>
+        <div>
+          <label for="cf-name">Your Name</label>
+          <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
+        </div>
+        <div>
+          <label for="cf-email">Your Email</label>
+          <input type="email" id="cf-email" name="email" placeholder="jane@example.com" required />
+        </div>
+        <div>
+          <label for="cf-subject">I'm interested in</label>
+          <select id="cf-subject" name="subject">
+            <option value="Speaking Engagement">Speaking Engagement</option>
+            <option value="Board Position">Board Position</option>
+            <option value="Podcast Collaboration">Podcast Collaboration</option>
+            <option value="Advisory">Strategic Advisory</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" placeholder="Tell me about your event, organisation or project…"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Send Message →</button>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Writing show-more toggle ── -->
+<script>
+  function toggleWriting(btn) {
+    var hidden = document.querySelectorAll('.writing-hidden');
+    var expanded = btn.getAttribute('data-expanded') === 'true';
+    hidden.forEach(function(el) { el.style.display = expanded ? '' : 'flex'; });
+    btn.setAttribute('data-expanded', !expanded);
+    btn.textContent = expanded ? 'Show More Posts' : 'Show Fewer Posts';
+  }
+</script>
+
+<!-- ── Video click-to-play ── -->
+<script>
+  document.querySelectorAll('.yt-thumb').forEach(function(thumb) {
+    thumb.addEventListener('click', function() {
+      var id = this.dataset.id;
+      if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) return;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      this.classList.add('playing');
+      this.appendChild(iframe);
+    });
+  });
+</script>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2026 Antoine Leboyer · <a href="https://www.linkedin.com/in/antoineleboyer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,0.4);">LinkedIn</a></p>
+</footer>
+
+</body>
+</html>
