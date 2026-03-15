@@ -119,6 +119,28 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--gold); }
+    /* Hamburger button — hidden on desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ── Hero ── */
     #hero {
@@ -638,20 +660,48 @@
 
     /* ── Responsive ── */
     @media (max-width: 680px) {
+      /* ── Navigation: hamburger ── */
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0; right: 0;
+        background: var(--navy);
+        flex-direction: column;
+        gap: 0;
+        z-index: 999;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a {
+        font-size: 0.85rem;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+      }
+      nav { padding: 0 1rem; position: relative; }
+
+      /* ── Layout ── */
       .about-news-outer { grid-template-columns: 1fr; }
       .about-news-outer .about-grid { grid-template-columns: 1fr; }
       .about-grid, .hravuta-inner, .podcast-card, .hero-inner, .contact-grid, .hbs-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
       }
+      .yt-grid, .board-grid, .books-grid, .roles-grid { grid-template-columns: 1fr; }
+      .talk-item { grid-template-columns: 2rem 1fr; }
+
+      /* ── Hero ── */
       .hero-photo-wrap { order: -1; max-width: 260px; margin: 0 auto; }
+
+      /* ── Misc ── */
       .podcast-visual { display: none; }
-      nav { padding: 0 1rem; }
-      .nav-links { gap: 1rem; }
-      .nav-links a { font-size: 0.75rem; }
       section { padding: 3.5rem 1.25rem; }
       .fee-box { flex-direction: column; }
       .music-note { flex-direction: column; gap: 0.75rem; }
+
+      /* ── HBS Cases inline max-width fix ── */
+      #hbs-cases p[style], #hbs-cases div[style] { max-width: 100% !important; }
     }
   </style>
 </head>
@@ -660,6 +710,9 @@
 <!-- ── Navigation ── -->
 <nav>
   <span class="nav-logo">Antoine Leboyer</span>
+  <button class="hamburger" aria-label="Toggle navigation" onclick="this.classList.toggle('open'); document.querySelector('.nav-links').classList.toggle('open');">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#writing">Writing</a>
@@ -1344,6 +1397,16 @@
     </div>
   </div>
 </section>
+
+<!-- ── Mobile nav: close on link tap ── -->
+<script>
+  document.querySelectorAll('.nav-links a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.remove('open');
+      document.querySelector('.hamburger').classList.remove('open');
+    });
+  });
+</script>
 
 <!-- ── Writing show-more toggle ── -->
 <script>
