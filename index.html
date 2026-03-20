@@ -256,22 +256,15 @@
       white-space: nowrap;
     }
 
-    /* ── About + News combined layout ── */
-    .about-news-outer {
+    /* ── News grid ── */
+    .news-grid {
       display: grid;
-      grid-template-columns: 3fr 2fr;
-      gap: 4rem;
-      align-items: start;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
     }
-    .about-news-outer .about-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-    .news-sidebar-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
+    @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .news-grid { grid-template-columns: 1fr; } }
 
     /* ── News cards ── */
     .news-card {
@@ -296,6 +289,8 @@
     }
     .news-badge-upcoming { background: var(--gold); color: #fff; }
     .news-badge-news     { background: var(--navy); color: #fff; }
+    .news-badge-podcast  { background: #2d6a4f;    color: #fff; }
+    .news-badge-press    { background: #555;        color: #fff; }
     .news-card-meta {
       font-family: 'Helvetica Neue', sans-serif;
       font-size: 0.72rem;
@@ -683,8 +678,6 @@
       nav { padding: 0 1rem; position: relative; }
 
       /* ── Layout ── */
-      .about-news-outer { grid-template-columns: 1fr; }
-      .about-news-outer .about-grid { grid-template-columns: 1fr; }
       .about-grid, .hravuta-inner, .podcast-card, .hero-inner, .contact-grid, .hbs-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -716,6 +709,7 @@
   </button>
   <div class="nav-links">
     <a href="#about">About</a>
+    <a href="#news">News</a>
     <a href="#writing">Writing</a>
     <a href="#speaking">Speaking</a>
     <a href="#videos">Videos</a>
@@ -764,104 +758,103 @@
 <!-- ── About + News ── -->
 <section id="about">
   <div class="container">
-    <div class="about-news-outer">
-
-      <!-- LEFT: About -->
-      <div>
-        <p class="section-label">About</p>
-        <h2>A career at the intersection of tech, venture &amp; culture</h2>
-        <div class="divider"></div>
-        <div class="about-grid">
-          <div class="about-text">
-            <p>
-              Antoine Leboyer is the Managing Director of the Munich Technical University
-              Venture Lab for Software and Artificial Intelligence, where he advises over
-              a hundred university-led startups.
-            </p>
-            <p>
-              From 2008 to 2020 he served as President and CEO of the Swiss software group
-              <strong>GSX</strong>, leading it through international expansion until its
-              acquisition by Martello Technology. His entrepreneurial journey became the
-              subject of a <strong>Harvard Business School case study</strong> — taught
-              in MBA programmes worldwide.
-            </p>
-            <p>
-              He initiated <strong>Virtual Hravuta</strong> — a Torah-focused AI chatbot —
-              and a member of the boards of both tech companies and cultural organisations.
-              A classical music journalist at heart, he brings rare intellectual breadth
-              to every stage and boardroom.
-            </p>
-            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
-              <a href="#contact" class="btn btn-primary">Get in Touch</a>
-              <a href="#hbs-cases" class="btn" style="background:transparent; border:2px solid var(--gold); color:var(--gold);">HBS Cases →</a>
-            </div>
-          </div>
-          <div class="about-facts">
-            <div class="fact-item">
-              <div class="fact-label">Current role</div>
-              <div class="fact-value">Managing Director, TUM Venture Lab (Software &amp; AI)</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">Previous</div>
-              <div class="fact-value">President &amp; CEO, GSX (2008–2020)</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">Education</div>
-              <div class="fact-value">Centrale-Supélec · Harvard Business School (MBA)</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">Harvard Business School</div>
-              <div class="fact-value">Subject of an HBS case study on entrepreneurship &amp; software M&amp;A</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">Podcast</div>
-              <div class="fact-value">Entrepreneurial Realities — 90+ episodes, 15,000+ plays</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">Books</div>
-              <div class="fact-value">Co-author of two books on sales strategy and market building</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label">LinkedIn</div>
-              <div class="fact-value">
-                <a href="https://www.linkedin.com/in/antoineleboyer/" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">
-                  linkedin.com/in/antoineleboyer
-                </a>
-              </div>
-            </div>
+    <p class="section-label">About</p>
+    <h2>A career at the intersection of tech, venture &amp; culture</h2>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          Antoine Leboyer is the Managing Director of the Munich Technical University
+          Venture Lab for Software and Artificial Intelligence, where he advises over
+          a hundred university-led startups.
+        </p>
+        <p>
+          From 2008 to 2020 he served as President and CEO of the Swiss software group
+          <strong>GSX</strong>, leading it through international expansion until its
+          acquisition by Martello Technology. His entrepreneurial journey became the
+          subject of a <strong>Harvard Business School case study</strong> — taught
+          in MBA programmes worldwide.
+        </p>
+        <p>
+          He initiated <strong>Virtual Hravuta</strong> — a Torah-focused AI chatbot —
+          and a member of the boards of both tech companies and cultural organisations.
+          A classical music journalist at heart, he brings rare intellectual breadth
+          to every stage and boardroom.
+        </p>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
+          <a href="#contact" class="btn btn-primary">Get in Touch</a>
+          <a href="#hbs-cases" class="btn" style="background:transparent; border:2px solid var(--gold); color:var(--gold);">HBS Cases →</a>
+        </div>
+      </div>
+      <div class="about-facts">
+        <div class="fact-item">
+          <div class="fact-label">Current role</div>
+          <div class="fact-value">Managing Director, TUM Venture Lab (Software &amp; AI)</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">Previous</div>
+          <div class="fact-value">President &amp; CEO, GSX (2008–2020)</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">Education</div>
+          <div class="fact-value">Centrale-Supélec · Harvard Business School (MBA)</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">Harvard Business School</div>
+          <div class="fact-value">Subject of an HBS case study on entrepreneurship &amp; software M&amp;A</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">Podcast</div>
+          <div class="fact-value">Entrepreneurial Realities — 90+ episodes, 15,000+ plays</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">Books</div>
+          <div class="fact-value">Co-author of two books on sales strategy and market building</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label">LinkedIn</div>
+          <div class="fact-value">
+            <a href="https://www.linkedin.com/in/antoineleboyer/" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">
+              linkedin.com/in/antoineleboyer
+            </a>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <!-- RIGHT: News -->
-      <div>
-        <span id="news"></span>
-        <p class="section-label">News &amp; Upcoming</p>
-        <h2>Where to Find Antoine Next</h2>
-        <div class="divider"></div>
-        <div class="news-sidebar-grid">
+<!-- ── News ── -->
+<section id="news" style="background:var(--mid);">
+  <div class="container">
+    <p class="section-label">News &amp; Upcoming</p>
+    <h2>What's Happening</h2>
+    <div class="divider"></div>
 
-          <div class="news-card">
-            <span class="news-badge news-badge-upcoming">Upcoming</span>
-            <div class="news-card-meta">18–19 March 2026 · Stuttgart</div>
-            <h3>How to Get a Second Call with a VC</h3>
-            <p>Expert session (13:15–15:00, Wed 18 March) at the Stuttgart Migrant Accelerator two-day Kickoff — a programme empowering migrant founders to start up in Germany.</p>
-            <a class="news-card-link"
-               href="https://themigrantaccelerator.com/"
-               target="_blank" rel="noopener noreferrer">More info →</a>
-          </div>
+    <!-- NEWS CARDS — newest/soonest first. Copy a card block to add a new item.
+         Badge options: news-badge-upcoming (gold) | news-badge-news (navy) | news-badge-podcast | news-badge-press
+         Type icons: 📍 Event  🎙 Podcast  ✍️ Article  📺 Video  📰 Press
+    -->
+    <div class="news-grid">
 
-          <div class="news-card">
-            <span class="news-badge news-badge-upcoming">Upcoming</span>
-            <div class="news-card-meta">22 April 2026 · Munich</div>
-            <h3>AI in Europe: Foundations, Startups &amp; Digital Sovereignty</h3>
-            <p>Panel discussion at Institut français München, organised by Initiative Munich-Bordeaux. Antoine joins fellow experts for a bilingual evening on the foundations, uses, ethical issues and future of AI in Europe.</p>
-            <a class="news-card-link"
-               href="https://www.linkedin.com/feed/update/urn:li:activity:7429420868633665537/"
-               target="_blank" rel="noopener noreferrer">View announcement →</a>
-          </div>
+      <div class="news-card">
+        <span class="news-badge news-badge-upcoming">📍 Upcoming · Event</span>
+        <div class="news-card-meta">22 April 2026 · Munich</div>
+        <h3>AI in Europe: Foundations, Startups &amp; Digital Sovereignty</h3>
+        <p>Panel discussion at Institut français München on the foundations, uses, ethical issues and future of AI in Europe.</p>
+        <a class="news-card-link"
+           href="https://www.linkedin.com/feed/update/urn:li:activity:7429420868633665537/"
+           target="_blank" rel="noopener noreferrer">View announcement →</a>
+      </div>
 
-        </div>
+      <div class="news-card">
+        <span class="news-badge news-badge-news">📍 Event</span>
+        <div class="news-card-meta">18–19 March 2026 · Stuttgart</div>
+        <h3>How to Get a Second Call with a VC</h3>
+        <p>Expert session at the Stuttgart Migrant Accelerator Kickoff — empowering migrant founders to start up in Germany.</p>
+        <a class="news-card-link"
+           href="https://themigrantaccelerator.com/"
+           target="_blank" rel="noopener noreferrer">More info →</a>
       </div>
 
     </div>
