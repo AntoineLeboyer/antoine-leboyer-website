@@ -314,6 +314,8 @@
       transition: color 0.2s;
     }
     .news-card-link:hover { color: #b5852e; border-color: #b5852e; }
+    .news-card-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+    .news-card-photos img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 2px; }
     @media (max-width: 680px) { .news-grid { grid-template-columns: 1fr; } }
 
     /* ── About ── */
@@ -861,6 +863,10 @@
         <span class="news-badge news-badge-news">📍 Event</span>
         <div class="news-card-meta">18–19 March 2026 · Stuttgart</div>
         <h3>How to Get a Second Call with a VC</h3>
+        <div class="news-card-photos">
+          <img src="stuttgart-talk.jpeg" alt="Antoine presenting at the Stuttgart Migrant Accelerator" />
+          <img src="stuttgart-group.jpeg" alt="Group photo at the Stuttgart Migrant Accelerator Kickoff" />
+        </div>
         <p>Expert session at the Stuttgart Migrant Accelerator Kickoff — empowering migrant founders to start up in Germany.</p>
         <a class="news-card-link"
            href="https://themigrantaccelerator.com/"
