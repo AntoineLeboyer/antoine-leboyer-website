@@ -1,5 +1,23 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 
+const JEWISH_PROMPT = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, and modern Jewish thought. Read this article carefully, then identify the most relevant Jewish philosophical, ethical, or spiritual concepts that illuminate the situation described.
+
+Respond with ONLY a valid JSON object (no markdown, no preamble):
+{
+  "headline": "<one clear sentence: what is this article about?>",
+  "jewish_lens": "<2-3 sentences: how does Jewish tradition as a whole approach this type of human situation — what is the broader framework?>",
+  "topics": [
+    {
+      "concept": "<Jewish ethical/philosophical concept name in English>",
+      "hebrew": "<Hebrew or Aramaic term, e.g. Tikkun Olam, Tzedek, Pikuach Nefesh — or empty string if none>",
+      "relevance": "<3-4 sentences specifically connecting this concept to the events described in the article — be concrete, not generic>",
+      "sefaria_query": "<3-5 English keywords that will find relevant Talmud/Torah/commentary passages on this theme>"
+    }
+  ]
+}
+
+Include 3 to 4 topics. Each must be directly connected to what is described in the article — not generic wisdom.`;
+
 /* ── Strip HTML to plain text ── */
 function extractContent(html) {
   const getMeta = (attr, val) => {
@@ -26,19 +44,20 @@ function extractContent(html) {
   return { title: title.trim(), description: description.trim(), body };
 }
 
-/* ── Call Claude API ── */
-async function callClaude(apiKey, prompt) {
+/* ── Call Claude API with a content array ── */
+async function callClaudeMessages(apiKey, content) {
   const res = await fetch(ANTHROPIC_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'anthropic-version': '2023-06-01',
+      'anthropic-beta': 'pdfs-2024-09-25'
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 1500,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content }]
     })
   });
 
@@ -85,53 +104,46 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on the server.' }) };
   }
 
-  let url;
+  let url, pdf, filename;
   try {
-    ({ url } = JSON.parse(event.body));
-    if (!url) throw new Error();
+    ({ url, pdf, filename } = JSON.parse(event.body));
+    if (!url && !pdf) throw new Error();
   } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Please provide a valid URL.' }) };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Please provide a valid URL or PDF.' }) };
   }
 
   try {
-    // 1. Fetch article server-side (no CORS issues)
-    const articleRes = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
-      signal: AbortSignal.timeout(10000)
-    });
-    if (!articleRes.ok) throw new Error('Could not fetch the article. The site may block automated access — try copy-pasting the text directly.');
-    const html = await articleRes.text();
+    let title = '';
+    let claudeContent;
 
-    // 2. Extract readable content
-    const { title, description, body } = extractContent(html);
-    const articleText = [title, description, body].filter(Boolean).join('\n\n');
-    if (articleText.trim().length < 100) throw new Error('Could not extract enough content from this article.');
+    if (pdf) {
+      // PDF mode: send document directly to Claude
+      title = filename ? filename.replace(/\.pdf$/i, '') : 'PDF Document';
+      claudeContent = [
+        {
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: pdf }
+        },
+        { type: 'text', text: JEWISH_PROMPT }
+      ];
+    } else {
+      // URL mode: fetch article and embed text in prompt
+      const articleRes = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
+        signal: AbortSignal.timeout(10000)
+      });
+      if (!articleRes.ok) throw new Error('Could not fetch the article. The site may block automated access — try copy-pasting the text directly.');
+      const html = await articleRes.text();
 
-    // 3. Claude reads the article and identifies Jewish philosophical themes
-    const prompt = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, and modern Jewish thought. Read this news article carefully, then identify the most relevant Jewish philosophical, ethical, or spiritual concepts that illuminate the situation described.
+      const { title: t, description, body } = extractContent(html);
+      title = t;
+      const articleText = [t, description, body].filter(Boolean).join('\n\n');
+      if (articleText.trim().length < 100) throw new Error('Could not extract enough content from this article.');
 
-Article:
----
-${articleText}
----
-
-Respond with ONLY a valid JSON object (no markdown, no preamble):
-{
-  "headline": "<one clear sentence: what is this article about?>",
-  "jewish_lens": "<2-3 sentences: how does Jewish tradition as a whole approach this type of human situation — what is the broader framework?>",
-  "topics": [
-    {
-      "concept": "<Jewish ethical/philosophical concept name in English>",
-      "hebrew": "<Hebrew or Aramaic term, e.g. Tikkun Olam, Tzedek, Pikuach Nefesh — or empty string if none>",
-      "relevance": "<3-4 sentences specifically connecting this concept to the events described in the article — be concrete, not generic>",
-      "sefaria_query": "<3-5 English keywords that will find relevant Talmud/Torah/commentary passages on this theme>"
+      claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }];
     }
-  ]
-}
 
-Include 3 to 4 topics. Each must be directly connected to what is described in the article — not generic wisdom.`;
-
-    const raw = await callClaude(apiKey, prompt);
+    const raw = await callClaudeMessages(apiKey, claudeContent);
 
     let analysis;
     try {
@@ -145,12 +157,11 @@ Include 3 to 4 topics. Each must be directly connected to what is described in t
       throw new Error('The AI did not return a valid analysis. Please try again.');
     }
 
-    // 4. Search Sefaria in parallel for each topic
+    // Search Sefaria in parallel for each topic
     const sefariaResults = await Promise.all(
       analysis.topics.map(t => searchSefaria(t.sefaria_query || t.concept))
     );
 
-    // 5. Attach top passages to each topic
     const topics = analysis.topics.map((t, i) => {
       const hits = sefariaResults[i] || [];
       const passages = hits.slice(0, 2).map(h => {
