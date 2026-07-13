@@ -1,6 +1,15 @@
 [build]
   publish = "."
 
+[build.environment]
+  NODE_VERSION = "18"
+
+[functions]
+  node_bundler = "zisi"
+
+[functions."analyze"]
+  timeout_seconds = 26
+
 [[headers]]
   for = "/*"
   [headers.values]
