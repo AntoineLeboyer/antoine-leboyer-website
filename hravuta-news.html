@@ -123,6 +123,19 @@
     .pdf-drop { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0.9rem 1.25rem; border: 1.5px dashed rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); font-family: 'Helvetica Neue', sans-serif; font-size: 0.88rem; cursor: pointer; border-radius: 2px; transition: border-color 0.2s, background 0.2s, color 0.2s; }
     .pdf-drop:hover, .pdf-drop.has-file { border-color: var(--gold); background: rgba(201,151,58,0.1); color: #fff; }
 
+    /* ── History ── */
+    #history-section { background: var(--mid); border-top: 1px solid var(--border); padding: 2rem 2rem 2.5rem; display: none; }
+    .history-header { display: flex; align-items: center; justify-content: space-between; max-width: 860px; margin: 0 auto 1.25rem; }
+    .history-label { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--light); }
+    .history-clear { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; color: var(--light); background: none; border: 1px solid var(--border); padding: 0.3rem 0.7rem; cursor: pointer; border-radius: 2px; transition: color 0.2s, border-color 0.2s; }
+    .history-clear:hover { color: #c44; border-color: #c44; }
+    .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; max-width: 860px; margin: 0 auto; }
+    .history-card { background: #fff; border: 1px solid var(--border); border-top: 2px solid var(--border); padding: 1rem; cursor: pointer; transition: border-top-color 0.2s, box-shadow 0.2s; border-radius: 0 0 2px 2px; }
+    .history-card:hover { border-top-color: var(--gold); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .history-card-date { font-family: 'Helvetica Neue', sans-serif; font-size: 0.65rem; color: var(--light); letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .history-card-title { font-size: 0.88rem; font-weight: 700; color: var(--navy); line-height: 1.4; margin-bottom: 0.35rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .history-card-headline { font-size: 0.78rem; color: #555; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
     @media (max-width: 580px) {
       .url-form { flex-direction: column; }
       .topics-wrap { padding: 2rem 1rem 3rem; }
@@ -163,6 +176,14 @@
   <div id="status"></div>
 </section>
 
+<section id="history-section">
+  <div class="history-header">
+    <span class="history-label">Recent analyses</span>
+    <button class="history-clear" id="clear-history-btn">Clear history</button>
+  </div>
+  <div class="history-grid" id="history-list"></div>
+</section>
+
 <div id="results">
   <div id="article-banner" class="article-banner">
     <div class="label">Article</div>
@@ -184,6 +205,53 @@
 <script>
 let currentMode = 'url';
 let pdfData = null;
+
+const HISTORY_KEY = 'hravuta_history';
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveToHistory(ref, data) {
+  const entries = getHistory();
+  entries.unshift({ id: Date.now(), ref, title: data.title, headline: data.headline, jewish_lens: data.jewish_lens, topics: data.topics });
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 20)));
+  renderHistory();
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' · ' +
+         d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderHistory() {
+  const entries = getHistory();
+  const section = document.getElementById('history-section');
+  const list = document.getElementById('history-list');
+  if (entries.length === 0) { section.style.display = 'none'; list.innerHTML = ''; return; }
+  section.style.display = 'block';
+  list.innerHTML = entries.map(e => `
+    <div class="history-card" onclick="restoreEntry(${e.id})">
+      <div class="history-card-date">${formatDate(e.id)}</div>
+      <div class="history-card-title">${e.title || e.ref || 'Document'}</div>
+      ${e.headline ? `<div class="history-card-headline">${e.headline}</div>` : ''}
+    </div>`).join('');
+}
+
+function restoreEntry(id) {
+  const entry = getHistory().find(e => e.id === id);
+  if (!entry) return;
+  document.getElementById('res-title').textContent    = entry.title    || 'Document';
+  document.getElementById('res-headline').textContent = entry.headline || '';
+  document.getElementById('res-url').textContent      = entry.ref;
+  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${entry.jewish_lens || ''}`;
+  renderTopics(entry.topics || []);
+  setStatus('');
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('article-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
@@ -318,6 +386,7 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${data.jewish_lens || ''}`;
 
     renderTopics(data.topics || []);
+    saveToHistory(displayRef, data);
     setStatus('');
     document.getElementById('results').style.display = 'block';
     document.getElementById('article-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -328,6 +397,13 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     activeBtn.disabled = false;
   }
 });
+
+document.getElementById('clear-history-btn').addEventListener('click', () => {
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
+});
+
+renderHistory();
 </script>
 
 <script data-goatcounter="https://antoineleboyer.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
