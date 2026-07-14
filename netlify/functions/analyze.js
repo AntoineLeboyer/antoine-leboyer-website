@@ -54,7 +54,7 @@ function extractContent(html) {
 }
 
 /* ── Call Claude API with a content array ── */
-async function callClaudeMessages(apiKey, content) {
+async function callClaudeMessages(apiKey, content, model) {
   const res = await fetch(ANTHROPIC_URL, {
     method: 'POST',
     headers: {
@@ -63,7 +63,7 @@ async function callClaudeMessages(apiKey, content) {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-5',
+      model,
       max_tokens: 2500,
       messages: [{ role: 'user', content }]
     })
@@ -151,7 +151,8 @@ exports.handler = async (event) => {
       claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }];
     }
 
-    const raw = await callClaudeMessages(apiKey, claudeContent);
+    const model = pdf ? 'claude-haiku-4-5-20251001' : 'claude-sonnet-5';
+    const raw = await callClaudeMessages(apiKey, claudeContent, model);
 
     let analysis;
     try {
