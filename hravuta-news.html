@@ -261,15 +261,25 @@ function setStatus(msg, isError = false) {
   el.innerHTML = msg ? (isError ? msg : `<span class="loader"></span>${msg}`) : '';
 }
 
+function sefariaUrl(ref) {
+  // "Sanhedrin 37a" → "Sanhedrin.37a", "Bava Metzia 59b" → "Bava_Metzia.59b", "Genesis 1:1" → "Genesis.1.1"
+  const m = ref.match(/^(.*?)\s+(\d.+)$/);
+  if (m) {
+    const book = m[1].replace(/\s+/g, '_');
+    const loc  = m[2].replace(/:/g, '.');
+    return 'https://www.sefaria.org/' + book + '.' + loc;
+  }
+  return 'https://www.sefaria.org/' + ref.replace(/\s+/g, '_');
+}
+
 function renderPassage(p) {
-  const slug = p.ref.replace(/\s/g, '_');
   return `
     <div class="passage">
       <div class="passage-ref">${p.ref}</div>
       ${p.he ? `<div class="passage-he">${p.he}</div>` : ''}
       ${p.en ? `<p class="passage-en">${p.en}</p>` : ''}
       ${p.categories ? `<div class="passage-cat">${p.categories}</div>` : ''}
-      <a class="passage-link" href="https://www.sefaria.org/${encodeURIComponent(slug)}" target="_blank" rel="noopener noreferrer">Read on Sefaria →</a>
+      <a class="passage-link" href="${sefariaUrl(p.ref)}" target="_blank" rel="noopener noreferrer">Read on Sefaria →</a>
     </div>`;
 }
 
@@ -279,7 +289,7 @@ function renderTopics(topics) {
   topics.forEach(t => {
     const passagesHtml = t.passages && t.passages.length
       ? `<div class="passages-label">Relevant texts from Sefaria</div>` + t.passages.map(renderPassage).join('')
-      : `<p class="no-passage">No Sefaria passages found for this theme — try searching <a href="https://www.sefaria.org/search#${encodeURIComponent(t.sefaria_query || t.concept)}" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">directly on Sefaria</a>.</p>`;
+      : `<p class="no-passage">No Sefaria passages found for this theme — try searching <a href="https://www.sefaria.org/search?q=${encodeURIComponent(t.sefaria_query || t.concept)}" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">directly on Sefaria</a>.</p>`;
     const card = document.createElement('div');
     card.className = 'topic-card';
     card.innerHTML = `
