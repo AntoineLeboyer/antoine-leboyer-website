@@ -9,7 +9,7 @@
   node_bundler = "zisi"
 
 [functions."analyze"]
-  timeout_seconds = 26
+  timeout_seconds = 45
 
 [[headers]]
   for = "/*"

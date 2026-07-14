@@ -1,22 +1,31 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 
-const JEWISH_PROMPT = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, and modern Jewish thought. Read this article carefully, then identify the most relevant Jewish philosophical, ethical, or spiritual concepts that illuminate the situation described.
+const JEWISH_PROMPT = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, Kabbalistic literature, Responsa literature, and modern Jewish thought (Soloveitchik, Heschel, Levinas, Rav Kook, Luzzatto, etc.). You are also deeply familiar with world events and their political, social, and ethical dimensions.
+
+Read this article carefully. Then identify the most relevant Jewish philosophical, ethical, or spiritual concepts that illuminate the specific situation described.
+
+For each concept you must:
+- Cite specific classical sources by name (tractate and folio, biblical verse, Maimonidean law, Midrash, or specific responsa)
+- Reference at least one classical rabbinic authority (Rashi, Rambam, Ramban, Ramchal, Vilna Gaon, etc.) and one modern Jewish thinker (Soloveitchik, Heschel, Levinas, Rav Kook, Nechama Leibowitz, etc.) when relevant
+- Explain concretely how the events in the article connect to this concept — not in a generic way
+- Provide the historical and theological background of the concept
 
 Respond with ONLY a valid JSON object (no markdown, no preamble):
 {
   "headline": "<one clear sentence: what is this article about?>",
-  "jewish_lens": "<2-3 sentences: how does Jewish tradition as a whole approach this type of human situation — what is the broader framework?>",
+  "jewish_lens": "<3-4 sentences: how Jewish tradition as a whole approaches this type of situation — cite specific thinkers or texts that shape the Jewish worldview here>",
   "topics": [
     {
       "concept": "<Jewish ethical/philosophical concept name in English>",
-      "hebrew": "<Hebrew or Aramaic term, e.g. Tikkun Olam, Tzedek, Pikuach Nefesh — or empty string if none>",
-      "relevance": "<3-4 sentences specifically connecting this concept to the events described in the article — be concrete, not generic>",
-      "sefaria_query": "<3-5 English keywords that will find relevant Talmud/Torah/commentary passages on this theme>"
+      "hebrew": "<Hebrew or Aramaic term — or empty string if none>",
+      "relevance": "<5-6 sentences: (1) how this concept applies concretely to the article's events; (2) the historical and theological background of this concept; (3) how classical authorities understood it; (4) how modern Jewish thinkers have developed or applied it>",
+      "sources": "<2-3 specific citations, e.g. 'Talmud Bavli, Sanhedrin 37a; Maimonides, Mishneh Torah, Hilchot De'ot 6:3; Abraham Joshua Heschel, The Prophets (1962), ch. 1'>",
+      "sefaria_query": "<3-5 English keywords to find relevant Talmud/Torah/commentary passages>"
     }
   ]
 }
 
-Include 3 to 4 topics. Each must be directly connected to what is described in the article — not generic wisdom.`;
+Include 3 to 4 topics. Each must be deeply and specifically connected to what is described in the article.`;
 
 /* ── Strip HTML to plain text ── */
 function extractContent(html) {
@@ -55,8 +64,8 @@ async function callClaudeMessages(apiKey, content) {
       'anthropic-beta': 'pdfs-2024-09-25'
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1500,
+      model: 'claude-sonnet-5',
+      max_tokens: 2500,
       messages: [{ role: 'user', content }]
     })
   });

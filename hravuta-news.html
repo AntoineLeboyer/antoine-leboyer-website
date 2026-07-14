@@ -99,7 +99,9 @@
     .topic-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
     .topic-concept { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
     .topic-hebrew { font-size: 1.05rem; color: var(--gold); font-style: italic; direction: rtl; }
-    .topic-relevance { font-size: 0.93rem; color: #333; line-height: 1.75; margin-bottom: 1.25rem; border-left: 2px solid var(--border); padding-left: 1rem; }
+    .topic-relevance { font-size: 0.93rem; color: #333; line-height: 1.75; margin-bottom: 0.9rem; border-left: 2px solid var(--border); padding-left: 1rem; }
+    .topic-sources { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; color: var(--light); line-height: 1.6; margin-bottom: 1.25rem; padding: 0.6rem 0.9rem; background: var(--mid); border-radius: 2px; }
+    .topic-sources strong { color: var(--navy); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 0.2rem; }
 
     /* Passages */
     .passages-label { font-family: 'Helvetica Neue', sans-serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); margin-bottom: 0.75rem; }
@@ -286,6 +288,7 @@ function renderTopics(topics) {
         ${t.hebrew ? `<span class="topic-hebrew">${t.hebrew}</span>` : ''}
       </div>
       <p class="topic-relevance">${t.relevance}</p>
+      ${t.sources ? `<div class="topic-sources"><strong>Sources</strong>${t.sources}</div>` : ''}
       ${passagesHtml}
     `;
     container.appendChild(card);
