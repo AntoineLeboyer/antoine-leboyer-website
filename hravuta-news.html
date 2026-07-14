@@ -325,10 +325,6 @@ document.getElementById('tab-pdf').addEventListener('click', () => {
 });
 
 // PDF file selection
-document.getElementById('pdf-drop-zone').addEventListener('click', () => {
-  document.getElementById('pdf-input').click();
-});
-
 document.getElementById('pdf-input').addEventListener('change', (e) => {
   const file = e.target.files[0];
   const dropZone = document.getElementById('pdf-drop-zone');
