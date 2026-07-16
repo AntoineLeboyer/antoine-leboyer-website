@@ -434,16 +434,53 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
   setStatus(statusMsg);
 
   try {
-    const res = await fetch('/.netlify/functions/analyze', {
+    const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fetchBody)
     });
 
+    if (!res.ok) {
+      let msg = `Server error (${res.status}). Please try again.`;
+      try { const err = await res.json(); if (err.error) msg = err.error; } catch {}
+      throw new Error(msg);
+    }
+
+    // Stream: first line is JSON meta ({title}), then Claude's text follows
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let raw = '';
+    let meta = null;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      raw += decoder.decode(value, { stream: true });
+      if (!meta) {
+        const nl = raw.indexOf('\n');
+        if (nl >= 0) {
+          try { meta = JSON.parse(raw.slice(0, nl)); } catch { meta = {}; }
+          raw = raw.slice(nl + 1);
+        }
+      }
+      if (meta) setStatus(`Claude is writing the commentary… (${raw.length.toLocaleString()} characters)`);
+    }
+
     let data;
-    try { data = await res.json(); }
-    catch { throw new Error(`Server error (${res.status}) — the request may have timed out. Please try again.`); }
-    if (!res.ok || data.error) throw new Error(data.error || 'An error occurred. Please try again.');
+    try {
+      const match = raw.match(/\{[\s\S]*\}/);
+      data = JSON.parse(match ? match[0] : raw);
+    } catch {
+      throw new Error('Could not parse the analysis. Please try again.');
+    }
+    data.title = (meta && meta.title) || data.headline || 'Document';
+
+    if (!Array.isArray(data.topics) || data.topics.length === 0) {
+      throw new Error('The AI did not return a valid analysis. Please try again.');
+    }
+
+    // Fetch supporting passages from Sefaria (directly from the browser)
+    setStatus('Finding supporting texts on Sefaria…');
+    await attachSefariaPassages(data.topics);
 
     saveToHistory(displayRef, data);
     showResults(displayRef, data);
@@ -454,6 +491,51 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     activeBtn.disabled = false;
   }
 });
+
+/* ── Sefaria (client-side) ── */
+async function searchSefaria(query) {
+  try {
+    const res = await fetch('https://www.sefaria.org/api/search-wrapper/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query, type: 'text', field: 'naive_lemmatizer',
+        sort_type: 'relevance', size: 4, source_proj: true
+      })
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data && data.hits && data.hits.hits) || [];
+  } catch { return []; }
+}
+
+async function fetchSefariaText(ref) {
+  try {
+    const res = await fetch(`https://www.sefaria.org/api/texts/${encodeURIComponent(ref)}?context=0&commentary=0`);
+    if (!res.ok) return null;
+    const d = await res.json();
+    const flat = v => Array.isArray(v) ? v.flat(Infinity).join(' ') : (v || '');
+    return {
+      ref: d.ref || ref,
+      en: flat(d.text).replace(/<[^>]+>/g, '').trim().slice(0, 600),
+      he: flat(d.he).replace(/<[^>]+>/g, '').trim().slice(0, 600),
+      categories: Array.isArray(d.categories) ? d.categories.join(' · ') : ''
+    };
+  } catch { return null; }
+}
+
+async function attachSefariaPassages(topics) {
+  await Promise.all(topics.map(async (t) => {
+    const hits = await searchSefaria(t.sefaria_query || t.concept);
+    const refs = hits.slice(0, 2)
+      .map(h => (h._source && h._source.ref) || h._id || '')
+      .map(r => String(r).replace(/\s*\(.*?\)\s*$/, '').trim())
+      .filter(Boolean);
+    const passages = (await Promise.all(refs.map(fetchSefariaText)))
+      .filter(p => p && p.ref && (p.en || p.he));
+    t.passages = passages;
+  }));
+}
 
 document.getElementById('clear-history-btn').addEventListener('click', () => {
   localStorage.removeItem(HISTORY_KEY);

@@ -28,6 +28,12 @@ Respond with ONLY a valid JSON object (no markdown, no preamble):
 
 Include 3 to 4 topics. Each must be deeply and specifically connected to what is described in the article.`;
 
+function getApiKey() {
+  try { if (typeof Netlify !== 'undefined' && Netlify.env) return Netlify.env.get('ANTHROPIC_API_KEY'); } catch {}
+  try { return Deno.env.get('ANTHROPIC_API_KEY'); } catch {}
+  return undefined;
+}
+
 /* ── Strip HTML to plain text ── */
 function extractContent(html) {
   const getMeta = (attr, val) => {
@@ -54,9 +60,55 @@ function extractContent(html) {
   return { title: title.trim(), description: description.trim(), body };
 }
 
-/* ── Call Claude API with a content array ── */
-async function callClaudeMessages(apiKey, content, model) {
-  const res = await fetch(ANTHROPIC_URL, {
+const jsonHeaders = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+
+export default async (request) => {
+  if (request.method === 'OPTIONS') {
+    return new Response('', { status: 200, headers: jsonHeaders });
+  }
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed.' }), { status: 405, headers: jsonHeaders });
+  }
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: 'API key not configured on the server.' }), { status: 500, headers: jsonHeaders });
+  }
+
+  let url, text, filename;
+  try {
+    ({ url, text, filename } = await request.json());
+    if (!url && !text) throw new Error();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Please provide a valid URL or PDF.' }), { status: 400, headers: jsonHeaders });
+  }
+
+  let title = '';
+  let articleText = '';
+
+  try {
+    if (text) {
+      title = filename ? filename.replace(/\.pdf$/i, '') : 'PDF Document';
+      articleText = text.slice(0, 15000);
+    } else {
+      const articleRes = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
+        signal: AbortSignal.timeout(10000)
+      });
+      if (!articleRes.ok) throw new Error('Could not fetch the article. The site may block automated access — try saving it as PDF instead.');
+      const html = await articleRes.text();
+      const { title: t, description, body } = extractContent(html);
+      title = t;
+      articleText = [t, description, body].filter(Boolean).join('\n\n');
+    }
+
+    if (articleText.trim().length < 100) throw new Error('Could not extract enough content from this document.');
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message || 'Could not read the document.' }), { status: 500, headers: jsonHeaders });
+  }
+
+  // Call Claude with streaming enabled
+  const anthRes = await fetch(ANTHROPIC_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,136 +116,59 @@ async function callClaudeMessages(apiKey, content, model) {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model,
+      model: 'claude-sonnet-5',
       max_tokens: 3500,
-      messages: [{ role: 'user', content }]
+      stream: true,
+      messages: [{ role: 'user', content: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }]
     })
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Claude API error: ${res.status} — ${err}`);
+  if (!anthRes.ok) {
+    const errText = await anthRes.text();
+    return new Response(JSON.stringify({ error: `Claude API error: ${anthRes.status} — ${errText.slice(0, 300)}` }), { status: 500, headers: jsonHeaders });
   }
 
-  const data = await res.json();
-  return data.content[0].text;
-}
+  // Pipe Anthropic's SSE stream through as plain text deltas.
+  // Protocol: first line is a JSON meta object, then raw text chunks follow.
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
 
-/* ── Search Sefaria ── */
-async function searchSefaria(query) {
-  try {
-    const params = new URLSearchParams({
-      query, type: 'text', field: 'naive_lemmatizer',
-      sort_type: 'relevance', size: 4
-    });
-    const res = await fetch(`https://www.sefaria.org/api/search-wrapper/?${params}`, {
-      signal: AbortSignal.timeout(8000)
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data?.hits?.hits || [];
-  } catch {
-    return [];
-  }
-}
-
-/* ── Main handler ── */
-exports.handler = async (event) => {
-  const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
-
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed.' }) };
-  }
-
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on the server.' }) };
-  }
-
-  let url, text, filename;
-  try {
-    ({ url, text, filename } = JSON.parse(event.body));
-    if (!url && !text) throw new Error();
-  } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Please provide a valid URL or PDF.' }) };
-  }
-
-  try {
-    let title = '';
-    let claudeContent;
-
-    if (text) {
-      // PDF mode: text was extracted in the browser
-      title = filename ? filename.replace(/\.pdf$/i, '') : 'PDF Document';
-      if (text.trim().length < 100) throw new Error('Could not extract enough content from this PDF.');
-      claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${text.slice(0, 15000)}\n---` }];
-    } else {
-      // URL mode: fetch article and embed text in prompt
-      const articleRes = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
-        signal: AbortSignal.timeout(10000)
-      });
-      if (!articleRes.ok) throw new Error('Could not fetch the article. The site may block automated access — try copy-pasting the text directly.');
-      const html = await articleRes.text();
-
-      const { title: t, description, body } = extractContent(html);
-      title = t;
-      const articleText = [t, description, body].filter(Boolean).join('\n\n');
-      if (articleText.trim().length < 100) throw new Error('Could not extract enough content from this article.');
-
-      claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }];
+  const stream = new ReadableStream({
+    async start(controller) {
+      controller.enqueue(encoder.encode(JSON.stringify({ title }) + '\n'));
+      const reader = anthRes.body.getReader();
+      let buf = '';
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          let idx;
+          while ((idx = buf.indexOf('\n')) >= 0) {
+            const line = buf.slice(0, idx).trim();
+            buf = buf.slice(idx + 1);
+            if (!line.startsWith('data: ')) continue;
+            const payload = line.slice(6);
+            try {
+              const ev = JSON.parse(payload);
+              if (ev.type === 'content_block_delta' && ev.delta && ev.delta.text) {
+                controller.enqueue(encoder.encode(ev.delta.text));
+              }
+            } catch {}
+          }
+        }
+      } catch {}
+      controller.close();
     }
+  });
 
-    const raw = await callClaudeMessages(apiKey, claudeContent, 'claude-sonnet-5');
-
-    let analysis;
-    try {
-      const match = raw.match(/\{[\s\S]*\}/);
-      analysis = JSON.parse(match ? match[0] : raw);
-    } catch {
-      throw new Error('Could not parse the AI analysis. Please try again.');
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': '*'
     }
-
-    if (!Array.isArray(analysis.topics) || analysis.topics.length === 0) {
-      throw new Error('The AI did not return a valid analysis. Please try again.');
-    }
-
-    // Search Sefaria in parallel for each topic
-    const sefariaResults = await Promise.all(
-      analysis.topics.map(t => searchSefaria(t.sefaria_query || t.concept))
-    );
-
-    const topics = analysis.topics.map((t, i) => {
-      const hits = sefariaResults[i] || [];
-      const passages = hits.slice(0, 2).map(h => {
-        const src = h._source || {};
-        const en = (Array.isArray(src.exact) ? src.exact.join(' ') : (src.exact || src.text || '')).replace(/<[^>]+>/g, '').trim();
-        const he = (Array.isArray(src.he) ? src.he.join(' ') : (src.he || '')).trim();
-        return {
-          ref: src.ref || '',
-          en,
-          he,
-          categories: Array.isArray(src.categories) ? src.categories.join(' · ') : ''
-        };
-      }).filter(p => p.ref && (p.en || p.he));
-
-      return { ...t, passages };
-    });
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ title, headline: analysis.headline || '', commentary: analysis.commentary || '', jewish_lens: analysis.jewish_lens || '', topics })
-    };
-
-  } catch (err) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: err.message || 'An unexpected error occurred.' })
-    };
-  }
+  });
 };
+
+export const config = { path: '/api/analyze' };
