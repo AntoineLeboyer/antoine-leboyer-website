@@ -433,19 +433,23 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
   document.getElementById('results').style.display = 'none';
   setStatus(statusMsg);
 
-  try {
+  const progress = { commentary: 0, topics: 0 };
+  const updateProgress = () => {
+    const total = progress.commentary + progress.topics;
+    setStatus(`Claude is writing the commentary… (${total.toLocaleString()} characters)`);
+  };
+
+  async function streamPart(part) {
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fetchBody)
+      body: JSON.stringify({ ...fetchBody, part })
     });
-
     if (!res.ok) {
       let msg = `Server error (${res.status}). Please try again.`;
       try { const err = await res.json(); if (err.error) msg = err.error; } catch {}
       throw new Error(msg);
     }
-
     // Stream: first line is JSON meta ({title}), then Claude's text follows
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -462,25 +466,38 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
           raw = raw.slice(nl + 1);
         }
       }
-      if (meta) setStatus(`Claude is writing the commentary… (${raw.length.toLocaleString()} characters)`);
+      if (meta) { progress[part] = raw.length; updateProgress(); }
     }
-
-    let data;
+    let parsed;
     try {
       const match = raw.match(/\{[\s\S]*\}/);
-      data = JSON.parse(match ? match[0] : raw);
+      parsed = JSON.parse(match ? match[0] : raw);
     } catch {
       throw new Error('Could not parse the analysis. Please try again.');
     }
-    data.title = (meta && meta.title) || data.headline || 'Document';
+    return { meta, parsed };
+  }
 
-    if (!Array.isArray(data.topics) || data.topics.length === 0) {
-      throw new Error('The AI did not return a valid analysis. Please try again.');
-    }
+  try {
+    // Run both halves in parallel: the essay (Sonnet) and the topic cards (Haiku)
+    const [commentaryRes, topicsRes] = await Promise.allSettled([
+      streamPart('commentary'),
+      streamPart('topics')
+    ]);
+
+    if (commentaryRes.status === 'rejected') throw commentaryRes.reason;
+
+    const data = { ...commentaryRes.value.parsed };
+    data.title = (commentaryRes.value.meta && commentaryRes.value.meta.title) || data.headline || 'Document';
+    data.topics = topicsRes.status === 'fulfilled' && Array.isArray(topicsRes.value.parsed.topics)
+      ? topicsRes.value.parsed.topics
+      : [];
 
     // Fetch supporting passages from Sefaria (directly from the browser)
-    setStatus('Finding supporting texts on Sefaria…');
-    await attachSefariaPassages(data.topics);
+    if (data.topics.length) {
+      setStatus('Finding supporting texts on Sefaria…');
+      await attachSefariaPassages(data.topics);
+    }
 
     saveToHistory(displayRef, data);
     showResults(displayRef, data);

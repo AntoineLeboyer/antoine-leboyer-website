@@ -1,32 +1,36 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 
-const JEWISH_PROMPT = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, Kabbalistic literature, Responsa literature, and modern Jewish thought (Soloveitchik, Heschel, Levinas, Rav Kook, Luzzatto, etc.). You are also deeply familiar with world events and their political, social, and ethical dimensions.
+const PERSONA = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, Kabbalistic literature, Responsa literature, and modern Jewish thought (Soloveitchik, Heschel, Levinas, Rav Kook, Luzzatto, etc.). You are also deeply familiar with world events and their political, social, and ethical dimensions.`;
 
-Read this article carefully. Then identify the most relevant Jewish philosophical, ethical, or spiritual concepts that illuminate the specific situation described.
+const COMMENTARY_PROMPT = `${PERSONA}
 
-For each concept you must:
-- Cite specific classical sources by name (tractate and folio, biblical verse, Maimonidean law, Midrash, or specific responsa)
-- Reference at least one classical rabbinic authority (Rashi, Rambam, Ramban, Ramchal, Vilna Gaon, etc.) and one modern Jewish thinker (Soloveitchik, Heschel, Levinas, Rav Kook, Nechama Leibowitz, etc.) when relevant
-- Explain concretely how the events in the article connect to this concept — not in a generic way
-- Provide the historical and theological background of the concept
+Read this article carefully.
 
-Respond with ONLY a valid JSON object (no markdown, no preamble):
+Respond with ONLY a valid JSON object (no markdown fences, no preamble):
 {
   "headline": "<one clear sentence: what is this article about?>",
-  "commentary": "<A flowing interpretive essay of 3 paragraphs, separated by \\n\\n. Paragraph 1: 'This text is about…' — summarize the core human situation at stake, beneath the surface facts. Paragraph 2: 'Jewish philosophy would draw an analogy with…' — pick 1-2 SPECIFIC narratives or precedents from Jewish sources (a biblical story, a Talmudic episode or dispute, a historical moment like the destruction of the Temple, a famous responsum) and develop the parallel explicitly: who plays which role, where the analogy holds, where it breaks down. Paragraph 3: what the tradition would conclude or advise here, and where different Jewish voices would disagree with each other. Write as a thoughtful rabbinic commentator, in accessible prose — no bullet points, no jargon without explanation.>",
-  "jewish_lens": "<3-4 sentences: how Jewish tradition as a whole approaches this type of situation — cite specific thinkers or texts that shape the Jewish worldview here>",
+  "commentary": "<A flowing interpretive essay of 3 paragraphs, separated by \\n\\n. Paragraph 1: 'This text is about…' — summarize the core human situation at stake, beneath the surface facts. Paragraph 2: 'Jewish philosophy would draw an analogy with…' — pick 1-2 SPECIFIC narratives or precedents from Jewish sources (a biblical story, a Talmudic episode or dispute, a historical moment like the destruction of the Temple, a famous responsum) and develop the parallel explicitly: who plays which role, where the analogy holds, where it breaks down. Paragraph 3: what the tradition would conclude or advise here, and where different Jewish voices would disagree with each other. Write as a thoughtful rabbinic commentator, in accessible prose — no bullet points, no jargon without explanation. Keep the whole essay under 350 words.>",
+  "jewish_lens": "<2-3 sentences: how Jewish tradition as a whole approaches this type of situation — cite specific thinkers or texts>"
+}`;
+
+const TOPICS_PROMPT = `${PERSONA}
+
+Read this article carefully. Identify exactly 3 Jewish philosophical, ethical, or spiritual concepts that illuminate the specific situation described.
+
+Respond with ONLY a valid JSON object (no markdown fences, no preamble):
+{
   "topics": [
     {
       "concept": "<Jewish ethical/philosophical concept name in English>",
       "hebrew": "<Hebrew or Aramaic term — or empty string if none>",
-      "relevance": "<5-6 sentences: (1) how this concept applies concretely to the article's events; (2) the historical and theological background of this concept; (3) how classical authorities understood it; (4) how modern Jewish thinkers have developed or applied it>",
+      "relevance": "<4-5 sentences: how this concept applies concretely to the article's events, its historical and theological background, how classical authorities understood it, and how modern Jewish thinkers have applied it>",
       "sources": "<2-3 specific citations, e.g. 'Talmud Bavli, Sanhedrin 37a; Maimonides, Mishneh Torah, Hilchot De'ot 6:3; Abraham Joshua Heschel, The Prophets (1962), ch. 1'>",
       "sefaria_query": "<3-5 English keywords to find relevant Talmud/Torah/commentary passages>"
     }
   ]
 }
 
-Include 3 to 4 topics. Each must be deeply and specifically connected to what is described in the article.`;
+Each topic must be deeply and specifically connected to what is described in the article — not generic wisdom.`;
 
 function getApiKey() {
   try { if (typeof Netlify !== 'undefined' && Netlify.env) return Netlify.env.get('ANTHROPIC_API_KEY'); } catch {}
@@ -75,9 +79,9 @@ export default async (request) => {
     return new Response(JSON.stringify({ error: 'API key not configured on the server.' }), { status: 500, headers: jsonHeaders });
   }
 
-  let url, text, filename;
+  let url, text, filename, part;
   try {
-    ({ url, text, filename } = await request.json());
+    ({ url, text, filename, part } = await request.json());
     if (!url && !text) throw new Error();
   } catch {
     return new Response(JSON.stringify({ error: 'Please provide a valid URL or PDF.' }), { status: 400, headers: jsonHeaders });
@@ -107,7 +111,12 @@ export default async (request) => {
     return new Response(JSON.stringify({ error: err.message || 'Could not read the document.' }), { status: 500, headers: jsonHeaders });
   }
 
-  // Call Claude with streaming enabled
+  // Two lightweight parts run as separate requests so each fits the edge time limit:
+  // "commentary" (Sonnet, the deep essay) and "topics" (Haiku, fast structured cards)
+  const isTopics = part === 'topics';
+  const prompt = isTopics ? TOPICS_PROMPT : COMMENTARY_PROMPT;
+  const model  = isTopics ? 'claude-haiku-4-5-20251001' : 'claude-sonnet-5';
+
   const anthRes = await fetch(ANTHROPIC_URL, {
     method: 'POST',
     headers: {
@@ -116,10 +125,10 @@ export default async (request) => {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-5',
-      max_tokens: 3500,
+      model,
+      max_tokens: isTopics ? 1800 : 1200,
       stream: true,
-      messages: [{ role: 'user', content: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }]
+      messages: [{ role: 'user', content: `${prompt}\n\nArticle:\n---\n${articleText}\n---` }]
     })
   });
 
