@@ -87,6 +87,8 @@
     .commentary-wrap > h2 { margin-bottom: 0.5rem; }
     .commentary-text p { font-size: 1.02rem; line-height: 1.9; color: #2a2a3a; margin-bottom: 1.25rem; }
     .commentary-text p:first-child::first-letter { font-size: 2.6rem; line-height: 1; float: left; padding-right: 0.5rem; color: var(--gold); font-weight: 700; }
+    .ref-link { color: var(--gold); border-bottom: 1px dotted var(--gold); transition: color 0.2s, border-color 0.2s; }
+    .ref-link:hover { color: #b5852e; border-bottom-style: solid; }
 
     /* Jewish lens overview */
     .jewish-lens {
@@ -272,20 +274,60 @@ function renderHistory() {
     </div>`).join('');
 }
 
+/* ── Inline Sefaria citation links ── */
+const refCache = {};
+
+async function resolveSefariaRef(ref) {
+  if (refCache[ref] !== undefined) return refCache[ref];
+  let url = null;
+  try {
+    const res = await fetch('https://www.sefaria.org/api/name/' + encodeURIComponent(ref) + '?limit=0');
+    if (res.ok) {
+      const d = await res.json();
+      if (d.is_ref && d.url) url = 'https://www.sefaria.org/' + d.url;
+    }
+  } catch {}
+  if (!url) url = 'https://www.sefaria.org/search?q=' + encodeURIComponent(ref);
+  refCache[ref] = url;
+  return url;
+}
+
+async function resolveAllRefs(texts) {
+  const refs = new Set();
+  texts.forEach(t => {
+    if (!t) return;
+    for (const m of t.matchAll(/\[\[([^\]]+)\]\]/g)) refs.add(m[1].trim());
+  });
+  await Promise.all([...refs].map(resolveSefariaRef));
+}
+
+function linkifyRefs(text) {
+  if (!text) return '';
+  return text.replace(/\[\[([^\]]+)\]\]/g, (_, r) => {
+    const ref = r.trim();
+    const url = refCache[ref] || ('https://www.sefaria.org/search?q=' + encodeURIComponent(ref));
+    return `<a class="ref-link" href="${url}" target="_blank" rel="noopener noreferrer">${ref}</a>`;
+  });
+}
+
 function renderCommentary(text) {
   const wrap = document.getElementById('commentary-wrap');
   const el = document.getElementById('res-commentary');
   if (!text) { wrap.style.display = 'none'; el.innerHTML = ''; return; }
-  el.innerHTML = text.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join('');
+  el.innerHTML = text.split(/\n\n+/).map(p => `<p>${linkifyRefs(p.trim())}</p>`).join('');
   wrap.style.display = 'block';
 }
 
-function showResults(ref, data) {
+async function showResults(ref, data) {
+  // Resolve all [[citations]] to canonical Sefaria URLs before rendering
+  const topicTexts = (data.topics || []).flatMap(t => [t.relevance, t.sources]);
+  await resolveAllRefs([data.commentary, data.jewish_lens, ...topicTexts]);
+
   document.getElementById('res-title').textContent    = data.title    || 'Document';
   document.getElementById('res-headline').textContent = data.headline || '';
   document.getElementById('res-url').textContent      = ref;
   renderCommentary(data.commentary);
-  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${data.jewish_lens || ''}`;
+  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
   renderTopics(data.topics || []);
   setStatus('');
   document.getElementById('results').style.display = 'block';
@@ -340,8 +382,8 @@ function renderTopics(topics) {
         <span class="topic-concept">${t.concept}</span>
         ${t.hebrew ? `<span class="topic-hebrew">${t.hebrew}</span>` : ''}
       </div>
-      <p class="topic-relevance">${t.relevance}</p>
-      ${t.sources ? `<div class="topic-sources"><strong>Sources</strong>${t.sources}</div>` : ''}
+      <p class="topic-relevance">${linkifyRefs(t.relevance)}</p>
+      ${t.sources ? `<div class="topic-sources"><strong>Sources</strong>${linkifyRefs(t.sources)}</div>` : ''}
       ${passagesHtml}
     `;
     container.appendChild(card);
@@ -500,7 +542,7 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     }
 
     saveToHistory(displayRef, data);
-    showResults(displayRef, data);
+    await showResults(displayRef, data);
 
   } catch (err) {
     setStatus(err.message || 'Something went wrong. Please try again.', true);
