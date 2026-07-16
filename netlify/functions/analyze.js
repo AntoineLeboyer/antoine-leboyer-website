@@ -13,6 +13,7 @@ For each concept you must:
 Respond with ONLY a valid JSON object (no markdown, no preamble):
 {
   "headline": "<one clear sentence: what is this article about?>",
+  "commentary": "<A flowing interpretive essay of 3 paragraphs, separated by \\n\\n. Paragraph 1: 'This text is about…' — summarize the core human situation at stake, beneath the surface facts. Paragraph 2: 'Jewish philosophy would draw an analogy with…' — pick 1-2 SPECIFIC narratives or precedents from Jewish sources (a biblical story, a Talmudic episode or dispute, a historical moment like the destruction of the Temple, a famous responsum) and develop the parallel explicitly: who plays which role, where the analogy holds, where it breaks down. Paragraph 3: what the tradition would conclude or advise here, and where different Jewish voices would disagree with each other. Write as a thoughtful rabbinic commentator, in accessible prose — no bullet points, no jargon without explanation.>",
   "jewish_lens": "<3-4 sentences: how Jewish tradition as a whole approaches this type of situation — cite specific thinkers or texts that shape the Jewish worldview here>",
   "topics": [
     {
@@ -64,7 +65,7 @@ async function callClaudeMessages(apiKey, content, model) {
     },
     body: JSON.stringify({
       model,
-      max_tokens: 2500,
+      max_tokens: 3500,
       messages: [{ role: 'user', content }]
     })
   });
@@ -191,7 +192,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ title, headline: analysis.headline || '', jewish_lens: analysis.jewish_lens || '', topics })
+      body: JSON.stringify({ title, headline: analysis.headline || '', commentary: analysis.commentary || '', jewish_lens: analysis.jewish_lens || '', topics })
     };
 
   } catch (err) {

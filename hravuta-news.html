@@ -81,6 +81,13 @@
     .article-banner .headline { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 0.25rem; }
     .article-banner .url-text { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.35); word-break: break-all; }
 
+    /* Commentary essay */
+    .commentary-wrap { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 0.5rem; }
+    .commentary-label { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+    .commentary-wrap > h2 { margin-bottom: 0.5rem; }
+    .commentary-text p { font-size: 1.02rem; line-height: 1.9; color: #2a2a3a; margin-bottom: 1.25rem; }
+    .commentary-text p:first-child::first-letter { font-size: 2.6rem; line-height: 1; float: left; padding-right: 0.5rem; color: var(--gold); font-weight: 700; }
+
     /* Jewish lens overview */
     .jewish-lens {
       background: var(--mid); border-left: 3px solid var(--gold);
@@ -194,6 +201,13 @@
     <div class="url-text" id="res-url"></div>
   </div>
 
+  <div class="commentary-wrap" id="commentary-wrap" style="display:none">
+    <p class="commentary-label">Commentary</p>
+    <h2>A Jewish Reading</h2>
+    <div class="divider"></div>
+    <div class="commentary-text" id="res-commentary"></div>
+  </div>
+
   <div class="jewish-lens" id="res-lens"></div>
 
   <div class="topics-wrap">
@@ -217,7 +231,7 @@ function getHistory() {
 
 function saveToHistory(ref, data) {
   const entries = getHistory();
-  entries.unshift({ id: Date.now(), ref, title: data.title, headline: data.headline, jewish_lens: data.jewish_lens, topics: data.topics });
+  entries.unshift({ id: Date.now(), ref, title: data.title, headline: data.headline, commentary: data.commentary, jewish_lens: data.jewish_lens, topics: data.topics });
   localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 20)));
   renderHistory();
 }
@@ -242,17 +256,30 @@ function renderHistory() {
     </div>`).join('');
 }
 
-function restoreEntry(id) {
-  const entry = getHistory().find(e => e.id === id);
-  if (!entry) return;
-  document.getElementById('res-title').textContent    = entry.title    || 'Document';
-  document.getElementById('res-headline').textContent = entry.headline || '';
-  document.getElementById('res-url').textContent      = entry.ref;
-  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${entry.jewish_lens || ''}`;
-  renderTopics(entry.topics || []);
+function renderCommentary(text) {
+  const wrap = document.getElementById('commentary-wrap');
+  const el = document.getElementById('res-commentary');
+  if (!text) { wrap.style.display = 'none'; el.innerHTML = ''; return; }
+  el.innerHTML = text.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join('');
+  wrap.style.display = 'block';
+}
+
+function showResults(ref, data) {
+  document.getElementById('res-title').textContent    = data.title    || 'Document';
+  document.getElementById('res-headline').textContent = data.headline || '';
+  document.getElementById('res-url').textContent      = ref;
+  renderCommentary(data.commentary);
+  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${data.jewish_lens || ''}`;
+  renderTopics(data.topics || []);
   setStatus('');
   document.getElementById('results').style.display = 'block';
   document.getElementById('article-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restoreEntry(id) {
+  const entry = getHistory().find(e => e.id === id);
+  if (!entry) return;
+  showResults(entry.ref, entry);
 }
 
 function setStatus(msg, isError = false) {
@@ -391,16 +418,8 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     catch { throw new Error(`Server error (${res.status}) — the request may have timed out. Please try again.`); }
     if (!res.ok || data.error) throw new Error(data.error || 'An error occurred. Please try again.');
 
-    document.getElementById('res-title').textContent    = data.title    || 'Document';
-    document.getElementById('res-headline').textContent = data.headline || '';
-    document.getElementById('res-url').textContent      = displayRef;
-    document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${data.jewish_lens || ''}`;
-
-    renderTopics(data.topics || []);
     saveToHistory(displayRef, data);
-    setStatus('');
-    document.getElementById('results').style.display = 'block';
-    document.getElementById('article-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showResults(displayRef, data);
 
   } catch (err) {
     setStatus(err.message || 'Something went wrong. Please try again.', true);
