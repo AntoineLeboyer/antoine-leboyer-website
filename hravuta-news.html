@@ -218,9 +218,25 @@
   </div>
 </div>
 
+<script src="vendor/pdf.min.js"></script>
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+
 let currentMode = 'url';
 let pdfData = null;
+
+async function extractPdfText(arrayBuffer) {
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const maxPages = Math.min(pdf.numPages, 25);
+  let text = '';
+  for (let i = 1; i <= maxPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(it => it.str).join(' ') + '\n\n';
+    if (text.length > 15000) break;
+  }
+  return text.replace(/\s+/g, ' ').trim().slice(0, 15000);
+}
 
 const HISTORY_KEY = 'hravuta_history';
 
@@ -351,35 +367,46 @@ document.getElementById('tab-pdf').addEventListener('click', () => {
   setStatus('');
 });
 
-// PDF file selection
-document.getElementById('pdf-input').addEventListener('change', (e) => {
+// PDF file selection — text is extracted in the browser
+document.getElementById('pdf-input').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   const dropZone = document.getElementById('pdf-drop-zone');
   const pdfBtn = document.getElementById('explore-btn-pdf');
-  if (!file) {
+
+  const reset = (msg) => {
     pdfData = null;
     document.getElementById('pdf-label-text').textContent = '📄 Choose a PDF (max 4 MB)';
     dropZone.classList.remove('has-file');
     pdfBtn.disabled = true;
-    return;
-  }
+    if (msg) setStatus(msg, true);
+  };
+
+  if (!file) { reset(); return; }
   if (file.size > 4 * 1024 * 1024) {
-    setStatus('PDF is too large (max 4 MB). Please compress it or choose a smaller file.', true);
     e.target.value = '';
-    pdfData = null;
-    document.getElementById('pdf-label-text').textContent = '📄 Choose a PDF (max 4 MB)';
-    dropZone.classList.remove('has-file');
-    pdfBtn.disabled = true;
+    reset('PDF is too large (max 4 MB). Please compress it or choose a smaller file.');
     return;
   }
+
   document.getElementById('pdf-label-text').textContent = `📄 ${file.name}`;
   dropZone.classList.add('has-file');
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    pdfData = { base64: ev.target.result.split(',')[1], filename: file.name };
+  setStatus('Extracting text from the PDF…');
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const text = await extractPdfText(buffer);
+    if (text.length < 100) {
+      e.target.value = '';
+      reset('Could not extract text from this PDF — it may be a scanned image. Try a PDF with selectable text.');
+      return;
+    }
+    pdfData = { text, filename: file.name };
     pdfBtn.disabled = false;
-  };
-  reader.readAsDataURL(file);
+    setStatus('');
+  } catch (err) {
+    e.target.value = '';
+    reset('Could not read this PDF. Please try another file.');
+  }
 });
 
 // Form submit
@@ -396,7 +423,7 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     statusMsg = 'Reading the article and consulting Jewish texts… (~10 seconds)';
   } else {
     if (!pdfData) { setStatus('Please choose a PDF file first.', true); return; }
-    fetchBody = { pdf: pdfData.base64, filename: pdfData.filename };
+    fetchBody = { text: pdfData.text, filename: pdfData.filename };
     displayRef = pdfData.filename;
     statusMsg = 'Reading the PDF and consulting Jewish texts… (~15 seconds)';
   }

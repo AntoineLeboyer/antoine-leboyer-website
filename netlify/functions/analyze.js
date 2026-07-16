@@ -113,10 +113,10 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on the server.' }) };
   }
 
-  let url, pdf, filename;
+  let url, text, filename;
   try {
-    ({ url, pdf, filename } = JSON.parse(event.body));
-    if (!url && !pdf) throw new Error();
+    ({ url, text, filename } = JSON.parse(event.body));
+    if (!url && !text) throw new Error();
   } catch {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Please provide a valid URL or PDF.' }) };
   }
@@ -125,16 +125,11 @@ exports.handler = async (event) => {
     let title = '';
     let claudeContent;
 
-    if (pdf) {
-      // PDF mode: send document directly to Claude
+    if (text) {
+      // PDF mode: text was extracted in the browser
       title = filename ? filename.replace(/\.pdf$/i, '') : 'PDF Document';
-      claudeContent = [
-        {
-          type: 'document',
-          source: { type: 'base64', media_type: 'application/pdf', data: pdf }
-        },
-        { type: 'text', text: JEWISH_PROMPT }
-      ];
+      if (text.trim().length < 100) throw new Error('Could not extract enough content from this PDF.');
+      claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${text.slice(0, 15000)}\n---` }];
     } else {
       // URL mode: fetch article and embed text in prompt
       const articleRes = await fetch(url, {
@@ -152,8 +147,7 @@ exports.handler = async (event) => {
       claudeContent = [{ type: 'text', text: `${JEWISH_PROMPT}\n\nArticle:\n---\n${articleText}\n---` }];
     }
 
-    const model = pdf ? 'claude-haiku-4-5-20251001' : 'claude-sonnet-5';
-    const raw = await callClaudeMessages(apiKey, claudeContent, model);
+    const raw = await callClaudeMessages(apiKey, claudeContent, 'claude-sonnet-5');
 
     let analysis;
     try {
