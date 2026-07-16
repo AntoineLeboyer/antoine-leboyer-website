@@ -126,7 +126,7 @@ export default async (request) => {
     },
     body: JSON.stringify({
       model,
-      max_tokens: isTopics ? 1800 : 1200,
+      max_tokens: isTopics ? 1800 : 2200,
       stream: true,
       messages: [{ role: 'user', content: `${prompt}\n\nArticle:\n---\n${articleText}\n---` }]
     })
