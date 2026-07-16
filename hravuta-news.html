@@ -327,7 +327,9 @@ async function showResults(ref, data) {
   document.getElementById('res-headline').textContent = data.headline || '';
   document.getElementById('res-url').textContent      = ref;
   renderCommentary(data.commentary);
-  document.getElementById('res-lens').innerHTML       = `<strong>Jewish perspective:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
+  const lensEl = document.getElementById('res-lens');
+  lensEl.style.display = data.jewish_lens ? '' : 'none';
+  lensEl.innerHTML = `<strong>Jewish perspective:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
   renderTopics(data.topics || []);
   setStatus('');
   document.getElementById('results').style.display = 'block';
@@ -344,6 +346,27 @@ function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
   el.className = isError ? 'error' : '';
   el.innerHTML = msg ? (isError ? msg : `<span class="loader"></span>${msg}`) : '';
+}
+
+// Parse Claude's JSON output, repairing common truncation (cut mid-string / missing braces)
+function robustJsonParse(raw) {
+  const start = raw.indexOf('{');
+  if (start < 0) throw new Error('No JSON found');
+  const s = raw.slice(start);
+
+  const end = s.lastIndexOf('}');
+  if (end >= 0) {
+    try { return JSON.parse(s.slice(0, end + 1)); } catch {}
+  }
+
+  // Truncated mid-output: strip a possibly incomplete trailing escape, then
+  // try closing the open string and any unclosed brackets.
+  let base = s.replace(/\\+$/, '');
+  const fixes = ['', '"', '"}', '"}]', '"}]}', '"}}', '"}]}}', '}', ']}', ']}}', '}}'];
+  for (const fix of fixes) {
+    try { return JSON.parse(base + fix); } catch {}
+  }
+  throw new Error('Unparseable JSON');
 }
 
 function sefariaUrl(ref) {
@@ -512,8 +535,7 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     }
     let parsed;
     try {
-      const match = raw.match(/\{[\s\S]*\}/);
-      parsed = JSON.parse(match ? match[0] : raw);
+      parsed = robustJsonParse(raw);
     } catch {
       throw new Error('Could not parse the analysis. Please try again.');
     }
