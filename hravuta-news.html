@@ -80,6 +80,16 @@
     .article-banner h2 { color: #fff; font-size: clamp(1.1rem, 2.5vw, 1.5rem); margin-bottom: 0.5rem; }
     .article-banner .headline { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 0.25rem; }
     .article-banner .url-text { font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.35); word-break: break-all; }
+    .share-row { display: flex; gap: 0.6rem; margin-top: 1.1rem; flex-wrap: wrap; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 0.95rem; background: transparent; color: var(--gold);
+      border: 1px solid var(--gold); border-radius: 2px; cursor: pointer;
+      font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      transition: background 0.2s, color 0.2s; text-decoration: none;
+    }
+    .share-btn:hover { background: var(--gold); color: #fff; }
 
     /* Commentary essay */
     .commentary-wrap { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 0.5rem; }
@@ -201,6 +211,10 @@
     <h2 id="res-title"></h2>
     <p class="headline" id="res-headline"></p>
     <div class="url-text" id="res-url"></div>
+    <div class="share-row">
+      <button class="share-btn" id="share-copy">🔗 Copy share link</button>
+      <a class="share-btn" id="share-wa" target="_blank" rel="noopener noreferrer">💬 Share on WhatsApp</a>
+    </div>
   </div>
 
   <div class="commentary-wrap" id="commentary-wrap" style="display:none">
@@ -221,6 +235,7 @@
 </div>
 
 <script src="vendor/pdf.min.js"></script>
+<script src="vendor/lz-string.min.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
 
@@ -318,6 +333,59 @@ function renderCommentary(text) {
   wrap.style.display = 'block';
 }
 
+/* ── Sharing ── */
+let currentShare = null;
+
+function buildShareUrl(ref, data) {
+  // Passages are re-fetched from Sefaria on open, so they stay out of the link
+  const payload = {
+    ref,
+    title: data.title,
+    headline: data.headline,
+    commentary: data.commentary,
+    jewish_lens: data.jewish_lens,
+    topics: (data.topics || []).map(({ passages, ...rest }) => rest)
+  };
+  const enc = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
+  return location.origin + location.pathname + '#s=' + enc;
+}
+
+function updateShareButtons(ref, data) {
+  currentShare = buildShareUrl(ref, data);
+  const waText = `A Jewish reading of "${data.title || ref}" — via Hravuta News\n${currentShare}`;
+  document.getElementById('share-wa').href = 'https://wa.me/?text=' + encodeURIComponent(waText);
+}
+
+document.getElementById('share-copy').addEventListener('click', async () => {
+  if (!currentShare) return;
+  const btn = document.getElementById('share-copy');
+  try {
+    await navigator.clipboard.writeText(currentShare);
+    btn.textContent = '✓ Link copied';
+  } catch {
+    prompt('Copy this link:', currentShare);
+  }
+  setTimeout(() => { btn.textContent = '🔗 Copy share link'; }, 2500);
+});
+
+async function loadSharedFromHash() {
+  if (!location.hash.startsWith('#s=')) return false;
+  try {
+    const json = LZString.decompressFromEncodedURIComponent(location.hash.slice(3));
+    const payload = JSON.parse(json);
+    if (!payload || !payload.commentary) throw new Error();
+    setStatus('Loading shared analysis…');
+    if (Array.isArray(payload.topics) && payload.topics.length) {
+      await attachSefariaPassages(payload.topics);
+    }
+    await showResults(payload.ref || 'Shared analysis', payload);
+    return true;
+  } catch {
+    setStatus('This share link appears to be invalid or incomplete.', true);
+    return false;
+  }
+}
+
 async function showResults(ref, data) {
   // Resolve all [[citations]] to canonical Sefaria URLs before rendering
   const topicTexts = (data.topics || []).flatMap(t => [t.relevance, t.sources]);
@@ -331,6 +399,7 @@ async function showResults(ref, data) {
   lensEl.style.display = data.jewish_lens ? '' : 'none';
   lensEl.innerHTML = `<strong>Jewish perspective:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
   renderTopics(data.topics || []);
+  updateShareButtons(ref, data);
   setStatus('');
   document.getElementById('results').style.display = 'block';
   document.getElementById('article-banner').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -624,6 +693,7 @@ document.getElementById('clear-history-btn').addEventListener('click', () => {
 });
 
 renderHistory();
+loadSharedFromHash();
 </script>
 
 <script data-goatcounter="https://antoineleboyer.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
