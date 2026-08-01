@@ -265,8 +265,20 @@ export default async (request) => {
   });
 
   if (!anthRes.ok) {
+    // Keep the provider's raw error out of the page — it is noise to a visitor
+    // and carries request ids. Log the detail, show a plain sentence.
     const errText = await anthRes.text();
-    return new Response(JSON.stringify({ error: `Claude API error: ${anthRes.status} — ${errText.slice(0, 300)}` }), { status: 500, headers: jsonHeaders });
+    console.error(`Anthropic API ${anthRes.status}: ${errText.slice(0, 500)}`);
+
+    let message;
+    if (anthRes.status === 401 || anthRes.status === 403) {
+      message = 'This page is misconfigured and cannot reach Claude right now. (If you are the site owner: the API key was rejected.)';
+    } else if (anthRes.status === 429) {
+      message = 'A lot of people are asking at once. Please try again in a moment.';
+    } else {
+      message = 'Claude is temporarily unavailable. Please try again in a moment.';
+    }
+    return new Response(JSON.stringify({ error: message }), { status: 502, headers: jsonHeaders });
   }
 
   // Pipe Anthropic's SSE stream through as plain text deltas.
