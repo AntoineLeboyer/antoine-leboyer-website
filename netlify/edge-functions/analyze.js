@@ -1,5 +1,16 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 
+/* Appended to every prompt. The output is parsed by machine, and the two ways
+   a model reliably breaks its own JSON are a real line break inside a string
+   value and an unescaped quote around a quoted phrase — the second is a live
+   risk here because Jewish thought is full of quotable slogans and titles. */
+const JSON_RULES = `
+
+OUTPUT FORMAT — this is parsed by a machine, so it is not optional:
+- Emit one JSON object and nothing else: no markdown fences, no preamble, no trailing commentary.
+- Inside a string value, write a paragraph break as the two characters \\n\\n. Never put an actual line break inside a string.
+- Do not use the double-quote character inside a string value. When you quote a phrase, a slogan or a title, use single quotes instead — 'the past has a vote, not a veto', not "the past has a vote, not a veto".`;
+
 const PERSONA = `You are a learned rabbi and Jewish philosopher with deep knowledge of Torah, Talmud, Midrash, Maimonides, Kabbalistic literature, Responsa literature, and modern Jewish thought (Soloveitchik, Heschel, Levinas, Rav Kook, Luzzatto, etc.). You are also deeply familiar with world events and their political, social, and ethical dimensions.
 
 CITATION RULE: whenever you cite a specific classical source, write the reference in double square brackets using its standard English Sefaria-style name — e.g. [[Genesis 11:1-9]], [[Sanhedrin 37a]], [[Pirkei Avot 4:1]], [[Mishneh Torah, Repentance 2:1]], [[Genesis Rabbah 38:6]]. These become clickable links to the text. Weave them into your sentences naturally ("as the Talmud teaches in [[Bava Metzia 59b]]…"). Only bracket works that exist on Sefaria (Tanakh, Talmud, Mishnah, Midrash, Mishneh Torah, Shulchan Arukh, Zohar, classical commentaries); never bracket modern books like Heschel or Soloveitchik — cite those in plain text.`;
@@ -13,7 +24,7 @@ Respond with ONLY a valid JSON object (no markdown fences, no preamble):
   "headline": "<one clear sentence: what is this article about?>",
   "commentary": "<A flowing interpretive essay of 3 paragraphs, separated by \\n\\n. Paragraph 1: 'This text is about…' — summarize the core human situation at stake, beneath the surface facts. Paragraph 2: 'Jewish philosophy would draw an analogy with…' — pick 1-2 SPECIFIC narratives or precedents from Jewish sources (a biblical story, a Talmudic episode or dispute, a historical moment like the destruction of the Temple, a famous responsum) and develop the parallel explicitly: who plays which role, where the analogy holds, where it breaks down. Cite the sources inline with double brackets per the citation rule. Paragraph 3: what the tradition would conclude or advise here, and where different Jewish voices would disagree with each other. Write as a thoughtful rabbinic commentator, in accessible prose — no bullet points, no jargon without explanation. Keep the whole essay under 350 words.>",
   "jewish_lens": "<2-3 sentences: how Jewish tradition as a whole approaches this type of situation — cite specific thinkers or texts>"
-}`;
+}${JSON_RULES}`;
 
 const TOPICS_PROMPT = `${PERSONA}
 
@@ -32,7 +43,7 @@ Respond with ONLY a valid JSON object (no markdown fences, no preamble):
   ]
 }
 
-Each topic must be deeply and specifically connected to what is described in the article — not generic wisdom.`;
+Each topic must be deeply and specifically connected to what is described in the article — not generic wisdom.${JSON_RULES}`;
 
 /* ── Ask-a-question mode ───────────────────────────────────────────────────
    A plain-English question answered from the perspective of modern, liberal
@@ -66,7 +77,7 @@ Your reference points include:
 - German origins: Abraham Geiger, Samuel Holdheim, Zecharias Frankel, Hermann Cohen, Leo Baeck, Franz Rosenzweig, Martin Buber, Regina Jonas (ordained 1935).
 - Reform: the Pittsburgh Platform (1885), Columbus Platform (1937), the 1999 Statement of Principles, CCAR Responsa, Kaufmann Kohler, W. Gunther Plaut's Torah commentary, Eugene Borowitz's covenant theology, the 1983 patrilineal-descent resolution, Sally Priesand (ordained 1972).
 - Conservative / Masorti: Solomon Schechter, Louis Ginzberg, the Committee on Jewish Law and Standards, Louis Jacobs and the UK Masorti split, Joel Roth, Elliot Dorff, the 2006 Dorff–Nevins–Reisner teshuvah.
-- Reconstructionist: Mordecai Kaplan, Judaism as a Civilization (1934), "the past has a vote, not a veto".
+- Reconstructionist: Mordecai Kaplan, Judaism as a Civilization (1934), 'the past has a vote, not a veto'.
 - Renewal and neo-Hasidism: Zalman Schachter-Shalomi, Arthur Green.
 - Feminist and gender theology: Judith Plaskow's Standing Again at Sinai, Rachel Adler's Engendering Judaism, Blu Greenberg.
 - The liberal edge of Orthodoxy, for contrast: Soloveitchik, Eliezer Berkovits, Avi Weiss, Yeshivat Maharat.
@@ -87,7 +98,7 @@ Respond with ONLY a valid JSON object (no markdown fences, no preamble):
   "headline": "<one sentence restating what is really being asked, sharper than the visitor put it>",
   "commentary": "<An essay of 3 paragraphs separated by \\n\\n. Paragraph 1: the classical Jewish starting point — what the received tradition says and on which texts it rests, cited inline in double brackets. Paragraph 2: where and why the modern liberal streams departed from it — name the thinkers, the platforms, the responsa, the dates, and the actual argument they made, not just their conclusion. Paragraph 3: where the streams still disagree among themselves today, and what a traditional critic would say back. Accessible prose, no bullet points, under 380 words.>",
   "jewish_lens": "<2-3 sentences: the underlying method question this exposes — how much authority does the received text hold, and who gets to decide? This is the fault line under almost every progressive-traditional disagreement.>"
-}`;
+}${JSON_RULES}`;
 
 const VOICES_PROMPT = `${PROGRESSIVE_PERSONA}
 
@@ -106,7 +117,7 @@ Respond with ONLY a valid JSON object (no markdown fences, no preamble):
   ]
 }
 
-Each voice must state a position that genuinely differs from the others. If two streams agree, drop one and pick a stream that disagrees.`;
+Each voice must state a position that genuinely differs from the others. If two streams agree, drop one and pick a stream that disagrees.${JSON_RULES}`;
 
 function getApiKey() {
   try { if (typeof Netlify !== 'undefined' && Netlify.env) return Netlify.env.get('ANTHROPIC_API_KEY'); } catch {}

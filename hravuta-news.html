@@ -528,23 +528,61 @@ function setStatus(msg, isError = false) {
   el.innerHTML = msg ? (isError ? msg : `<span class="loader"></span>${msg}`) : '';
 }
 
-// Parse Claude's JSON output, repairing common truncation (cut mid-string / missing braces)
+/* Repair the two ways a model breaks its own JSON from inside a string value:
+   a real line break where it should have written \n, and an unescaped double
+   quote around a quoted phrase. Walks the text tracking string state, so it
+   only touches characters inside string literals. A quote is treated as
+   closing only when the next non-space character is JSON structure; anything
+   else is a quote in the prose and gets escaped. */
+function repairJsonStrings(s) {
+  let out = '';
+  let inString = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (!inString) {
+      out += c;
+      if (c === '"') inString = true;
+      continue;
+    }
+    if (c === '\\') { out += c + (s[i + 1] || ''); i++; continue; }
+    if (c === '\n') { out += '\\n'; continue; }
+    if (c === '\r') { out += '\\r'; continue; }
+    if (c === '\t') { out += '\\t'; continue; }
+    if (c === '"') {
+      const rest = s.slice(i + 1);
+      const next = (rest.match(/^\s*(\S)/) || [])[1];
+      if (next === undefined || next === ',' || next === ':' || next === '}' || next === ']') {
+        out += c; inString = false;
+      } else {
+        out += '\\"';
+      }
+      continue;
+    }
+    out += c;
+  }
+  return out;
+}
+
+// Parse Claude's JSON output, repairing common truncation (cut mid-string /
+// missing braces) and malformed string contents.
 function robustJsonParse(raw) {
   const start = raw.indexOf('{');
   if (start < 0) throw new Error('No JSON found');
   const s = raw.slice(start);
 
-  const end = s.lastIndexOf('}');
-  if (end >= 0) {
-    try { return JSON.parse(s.slice(0, end + 1)); } catch {}
-  }
-
-  // Truncated mid-output: strip a possibly incomplete trailing escape, then
-  // try closing the open string and any unclosed brackets.
-  let base = s.replace(/\\+$/, '');
+  // Try the text as written first, then the same text with string contents
+  // repaired. For each, take the whole object, then — if the stream was cut
+  // short — close the open string and any unclosed brackets.
   const fixes = ['', '"', '"}', '"}]', '"}]}', '"}}', '"}]}}', '}', ']}', ']}}', '}}'];
-  for (const fix of fixes) {
-    try { return JSON.parse(base + fix); } catch {}
+  for (const candidate of [s, repairJsonStrings(s)]) {
+    const end = candidate.lastIndexOf('}');
+    if (end >= 0) {
+      try { return JSON.parse(candidate.slice(0, end + 1)); } catch {}
+    }
+    const base = candidate.replace(/\\+$/, '');
+    for (const fix of fixes) {
+      try { return JSON.parse(base + fix); } catch {}
+    }
   }
   throw new Error('Unparseable JSON');
 }
@@ -800,7 +838,20 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     setStatus(`Claude is writing… (${total.toLocaleString()} characters)`);
   };
 
+  // One silent retry when the model returns something the parser cannot
+  // rescue. Only a parse failure is retried — an HTTP error means the server
+  // or the key is unhappy, and asking again would not help.
   async function streamPart(part) {
+    try {
+      return await streamPartOnce(part);
+    } catch (err) {
+      if (!/parse/i.test(err.message || '')) throw err;
+      progress[part] = 0;
+      return await streamPartOnce(part);
+    }
+  }
+
+  async function streamPartOnce(part) {
     const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
