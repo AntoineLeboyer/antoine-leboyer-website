@@ -135,10 +135,66 @@
     .no-passage { font-family: 'Helvetica Neue', sans-serif; font-size: 0.82rem; color: var(--light); font-style: italic; }
 
     /* ── Mode tabs ── */
-    .mode-tabs { display: flex; max-width: 260px; margin: 0 auto 1.5rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
-    .mode-tab { flex: 1; padding: 0.55rem 1rem; background: transparent; color: rgba(255,255,255,0.55); font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border: none; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .mode-tabs { display: flex; max-width: 430px; margin: 0 auto 1.5rem; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
+    .mode-tab { flex: 1; padding: 0.55rem 0.75rem; background: transparent; color: rgba(255,255,255,0.55); font-family: 'Helvetica Neue', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: none; cursor: pointer; transition: background 0.2s, color 0.2s; white-space: nowrap; }
     .mode-tab.active { background: var(--gold); color: #fff; }
     .mode-tab:not(.active):hover { color: #fff; }
+
+    /* ── Question mode ── */
+    .q-form { display: block; max-width: 660px; margin: 0 auto; }
+    .q-input {
+      width: 100%; padding: 0.9rem 1.25rem; min-height: 96px; resize: vertical;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08); color: #fff;
+      font-family: 'Helvetica Neue', sans-serif; font-size: 0.95rem; line-height: 1.6;
+      border-radius: 2px; outline: none; transition: border-color 0.2s;
+    }
+    .q-input::placeholder { color: rgba(255,255,255,0.35); }
+    .q-input:focus { border-color: var(--gold); }
+    .q-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.75rem; }
+    .q-count { font-family: 'Helvetica Neue', sans-serif; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+    .q-count.over { color: #f08080; }
+    .q-examples { max-width: 660px; margin: 1.25rem auto 0; text-align: left; }
+    .q-examples-label { font-family: 'Helvetica Neue', sans-serif; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.6rem; }
+    .q-chip {
+      display: inline-block; margin: 0 0.4rem 0.4rem 0; padding: 0.35rem 0.8rem;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.65); font-family: 'Helvetica Neue', sans-serif;
+      font-size: 0.78rem; border-radius: 2px; cursor: pointer; transition: border-color 0.2s, color 0.2s;
+    }
+    .q-chip:hover { border-color: var(--gold); color: #fff; }
+
+    /* Guardrail notice — a redirect, not a rejection */
+    #guard-notice {
+      display: none; max-width: 660px; margin: 1.25rem auto 0;
+      background: rgba(255,255,255,0.07); border-left: 3px solid var(--gold);
+      padding: 1.1rem 1.35rem; text-align: left;
+    }
+    #guard-notice p { color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; }
+    #guard-notice p:last-child { margin-bottom: 0; }
+    .guard-rewrite {
+      background: transparent; border: 1px solid var(--gold); color: var(--gold);
+      font-family: 'Helvetica Neue', sans-serif; font-size: 0.8rem; text-align: left;
+      padding: 0.55rem 0.9rem; border-radius: 2px; cursor: pointer; line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+    .guard-rewrite:hover { background: var(--gold); color: #fff; }
+
+    /* Voice cards */
+    .voice-card { background: #fff; border: 1px solid var(--border); border-top: 3px solid var(--gold); padding: 1.75rem; margin-bottom: 1.5rem; border-radius: 0 0 2px 2px; }
+    .voice-stream { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.45rem; }
+    .voice-position { font-size: 0.98rem; color: var(--navy); font-style: italic; border-left: 2px solid var(--gold); padding-left: 1rem; margin-bottom: 0.9rem; }
+    .voice-reasoning { font-size: 0.93rem; color: #333; line-height: 1.75; margin-bottom: 0.9rem; }
+    .voice-thinkers { font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; color: var(--light); line-height: 1.6; margin-bottom: 1.25rem; padding: 0.6rem 0.9rem; background: var(--mid); border-radius: 2px; }
+    .voice-thinkers strong { color: var(--navy); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 0.2rem; }
+
+    /* Provenance disclosure */
+    .provenance {
+      max-width: 860px; margin: 0 auto 2rem; padding: 0.9rem 1.1rem;
+      background: var(--mid); border: 1px solid var(--border); border-radius: 2px;
+      font-family: 'Helvetica Neue', sans-serif; font-size: 0.78rem; line-height: 1.65; color: var(--light);
+    }
+    .provenance strong { color: var(--navy); }
 
     /* ── PDF drop zone ── */
     .pdf-drop { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0.9rem 1.25rem; border: 1.5px dashed rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); font-family: 'Helvetica Neue', sans-serif; font-size: 0.88rem; cursor: pointer; border-radius: 2px; transition: border-color 0.2s, background 0.2s, color 0.2s; }
@@ -161,6 +217,12 @@
       .url-form { flex-direction: column; }
       .topics-wrap { padding: 2rem 1rem 3rem; }
       .article-banner, .jewish-lens { padding: 1.5rem 1rem; }
+      .mode-tabs { flex-direction: column; max-width: 260px; }
+      .mode-tab { padding: 0.6rem 1rem; }
+      .mode-tab + .mode-tab { border-top: 1px solid rgba(255,255,255,0.15); }
+      .q-row { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+      .q-count { text-align: right; }
+      .voice-card { padding: 1.25rem; }
     }
   </style>
 </head>
@@ -174,11 +236,12 @@
 <section id="hero">
   <p class="eyebrow">Virtual Hravuta · AI &amp; Jewish Texts</p>
   <h1>Hravuta News</h1>
-  <p class="subtitle">Paste a news article URL. Claude reads it and finds the Jewish philosophical and ethical texts from <a href="https://www.sefaria.org" target="_blank" rel="noopener noreferrer" style="color:var(--gold);border-bottom:1px solid var(--gold);">Sefaria</a> that illuminate the situation.</p>
+  <p class="subtitle">Paste a news article, or just ask a question. Claude reads it and finds the Jewish philosophical and ethical texts from <a href="https://www.sefaria.org" target="_blank" rel="noopener noreferrer" style="color:var(--gold);border-bottom:1px solid var(--gold);">Sefaria</a> that illuminate it — and, for a question, how the modern liberal movements answer it differently.</p>
 
   <div class="mode-tabs">
     <button type="button" class="mode-tab active" id="tab-url">Article URL</button>
     <button type="button" class="mode-tab" id="tab-pdf">PDF Upload</button>
+    <button type="button" class="mode-tab" id="tab-question">Ask a question</button>
   </div>
 
   <form id="url-form">
@@ -193,7 +256,27 @@
       </label>
       <button type="submit" id="explore-btn-pdf" class="btn-explore" disabled>Explore →</button>
     </div>
+    <div id="panel-question" class="q-form" style="display:none">
+      <textarea id="question-input" class="q-input" maxlength="500"
+        placeholder="Ask in plain English — e.g. “Why do Reform and Masorti Jews disagree about who counts as Jewish?”"></textarea>
+      <div class="q-row">
+        <span class="q-count" id="q-count">0 / 500</span>
+        <button type="submit" id="explore-btn-q" class="btn-explore">Ask →</button>
+      </div>
+    </div>
   </form>
+
+  <div id="guard-notice"></div>
+
+  <div class="q-examples" id="q-examples" style="display:none">
+    <p class="q-examples-label">Try one of these</p>
+    <span class="q-chip">Why did Reform Judaism accept patrilineal descent when halakhah does not?</span>
+    <span class="q-chip">How do liberal movements justify ordaining women as rabbis?</span>
+    <span class="q-chip">What does it mean to say the Torah is divinely inspired but not dictated?</span>
+    <span class="q-chip">How do progressive Jews read the biblical texts on homosexuality?</span>
+    <span class="q-chip">Is keeping kosher optional in Reform Judaism, and on what grounds?</span>
+  </div>
+
   <div id="status"></div>
 </section>
 
@@ -207,7 +290,7 @@
 
 <div id="results">
   <div id="article-banner" class="article-banner">
-    <div class="label">Article</div>
+    <div class="label" id="res-label">Article</div>
     <h2 id="res-title"></h2>
     <p class="headline" id="res-headline"></p>
     <div class="url-text" id="res-url"></div>
@@ -218,8 +301,8 @@
   </div>
 
   <div class="commentary-wrap" id="commentary-wrap" style="display:none">
-    <p class="commentary-label">Commentary</p>
-    <h2>A Jewish Reading</h2>
+    <p class="commentary-label" id="commentary-label">Commentary</p>
+    <h2 id="commentary-heading">A Jewish Reading</h2>
     <div class="divider"></div>
     <div class="commentary-text" id="res-commentary"></div>
   </div>
@@ -227,9 +310,15 @@
   <div class="jewish-lens" id="res-lens"></div>
 
   <div class="topics-wrap">
-    <p class="topics-label">Sefaria · Jewish Texts</p>
-    <h2>Jewish Wisdom on This Situation</h2>
+    <p class="topics-label" id="topics-label">Sefaria · Jewish Texts</p>
+    <h2 id="topics-heading">Jewish Wisdom on This Situation</h2>
     <div class="divider"></div>
+    <div class="provenance" id="provenance" style="display:none">
+      <strong>Where this comes from.</strong> The bracketed citations link to classical texts on Sefaria and can be checked there.
+      The progressive positions — Geiger, Kaplan, Plaut, Borowitz, Adler, CCAR and CJLS responsa — are <em>not</em> in Sefaria's
+      library, which is almost entirely classical. Those come from Claude's own knowledge and are given with names and dates so
+      you can verify them yourself. Treat this as a starting point for study, not as a ruling.
+    </div>
     <div id="topics-container"></div>
   </div>
 </div>
@@ -264,7 +353,7 @@ function getHistory() {
 
 function saveToHistory(ref, data) {
   const entries = getHistory();
-  entries.unshift({ id: Date.now(), ref, title: data.title, headline: data.headline, commentary: data.commentary, jewish_lens: data.jewish_lens, topics: data.topics });
+  entries.unshift({ id: Date.now(), ref, mode: data.mode, title: data.title, headline: data.headline, commentary: data.commentary, jewish_lens: data.jewish_lens, topics: data.topics, voices: data.voices });
   localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, 20)));
   renderHistory();
 }
@@ -340,11 +429,13 @@ function buildShareUrl(ref, data) {
   // Passages are re-fetched from Sefaria on open, so they stay out of the link
   const payload = {
     ref,
+    mode: data.mode,
     title: data.title,
     headline: data.headline,
     commentary: data.commentary,
     jewish_lens: data.jewish_lens,
-    topics: (data.topics || []).map(({ passages, ...rest }) => rest)
+    topics: (data.topics || []).map(({ passages, ...rest }) => rest),
+    voices: (data.voices || []).map(({ passages, ...rest }) => rest)
   };
   const enc = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
   return location.origin + location.pathname + '#s=' + enc;
@@ -352,7 +443,9 @@ function buildShareUrl(ref, data) {
 
 function updateShareButtons(ref, data) {
   currentShare = buildShareUrl(ref, data);
-  const waText = `A Jewish reading of "${data.title || ref}" — via Hravuta News\n${currentShare}`;
+  const waText = data.mode === 'question'
+    ? `"${data.title || ref}" — how progressive Judaism answers, via Hravuta News\n${currentShare}`
+    : `A Jewish reading of "${data.title || ref}" — via Hravuta News\n${currentShare}`;
   document.getElementById('share-wa').href = 'https://wa.me/?text=' + encodeURIComponent(waText);
 }
 
@@ -375,8 +468,9 @@ async function loadSharedFromHash() {
     const payload = JSON.parse(json);
     if (!payload || !payload.commentary) throw new Error();
     setStatus('Loading shared analysis…');
-    if (Array.isArray(payload.topics) && payload.topics.length) {
-      await attachSefariaPassages(payload.topics);
+    const shared = payload.mode === 'question' ? payload.voices : payload.topics;
+    if (Array.isArray(shared) && shared.length) {
+      await attachSefariaPassages(shared);
     }
     await showResults(payload.ref || 'Shared analysis', payload);
     return true;
@@ -387,18 +481,35 @@ async function loadSharedFromHash() {
 }
 
 async function showResults(ref, data) {
-  // Resolve all [[citations]] to canonical Sefaria URLs before rendering
-  const topicTexts = (data.topics || []).flatMap(t => [t.relevance, t.sources]);
-  await resolveAllRefs([data.commentary, data.jewish_lens, ...topicTexts]);
+  const isQuestion = data.mode === 'question';
 
+  // Resolve all [[citations]] to canonical Sefaria URLs before rendering
+  const cardTexts = isQuestion
+    ? (data.voices || []).flatMap(v => [v.position, v.reasoning, v.thinkers])
+    : (data.topics || []).flatMap(t => [t.relevance, t.sources]);
+  await resolveAllRefs([data.commentary, data.jewish_lens, ...cardTexts]);
+
+  document.getElementById('res-label').textContent    = isQuestion ? 'Question' : 'Article';
   document.getElementById('res-title').textContent    = data.title    || 'Document';
   document.getElementById('res-headline').textContent = data.headline || '';
-  document.getElementById('res-url').textContent      = ref;
+  const urlEl = document.getElementById('res-url');
+  urlEl.style.display = isQuestion ? 'none' : '';
+  urlEl.textContent   = ref;
+
+  document.getElementById('commentary-label').textContent   = isQuestion ? 'Answer' : 'Commentary';
+  document.getElementById('commentary-heading').textContent = isQuestion ? 'A Progressive Reading' : 'A Jewish Reading';
+  document.getElementById('topics-label').textContent       = isQuestion ? 'Where the movements differ' : 'Sefaria · Jewish Texts';
+  document.getElementById('topics-heading').textContent     = isQuestion ? 'Four Answers, Not One' : 'Jewish Wisdom on This Situation';
+  document.getElementById('provenance').style.display       = isQuestion ? '' : 'none';
+
   renderCommentary(data.commentary);
   const lensEl = document.getElementById('res-lens');
   lensEl.style.display = data.jewish_lens ? '' : 'none';
-  lensEl.innerHTML = `<strong>Jewish perspective:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
-  renderTopics(data.topics || []);
+  lensEl.innerHTML = `<strong>${isQuestion ? 'The question underneath' : 'Jewish perspective'}:</strong> ${linkifyRefs(data.jewish_lens || '')}`;
+
+  if (isQuestion) renderVoices(data.voices || []);
+  else renderTopics(data.topics || []);
+
   updateShareButtons(ref, data);
   setStatus('');
   document.getElementById('results').style.display = 'block';
@@ -460,6 +571,26 @@ function renderPassage(p) {
     </div>`;
 }
 
+function renderVoices(voices) {
+  const container = document.getElementById('topics-container');
+  container.innerHTML = '';
+  voices.forEach(v => {
+    const passagesHtml = v.passages && v.passages.length
+      ? `<div class="passages-label">The classical text this argues with</div>` + v.passages.map(renderPassage).join('')
+      : '';
+    const card = document.createElement('div');
+    card.className = 'voice-card';
+    card.innerHTML = `
+      <div class="voice-stream">${v.stream || ''}</div>
+      ${v.position ? `<p class="voice-position">${linkifyRefs(v.position)}</p>` : ''}
+      ${v.reasoning ? `<p class="voice-reasoning">${linkifyRefs(v.reasoning)}</p>` : ''}
+      ${v.thinkers ? `<div class="voice-thinkers"><strong>Key voices</strong>${linkifyRefs(v.thinkers)}</div>` : ''}
+      ${passagesHtml}
+    `;
+    container.appendChild(card);
+  });
+}
+
 function renderTopics(topics) {
   const container = document.getElementById('topics-container');
   container.innerHTML = '';
@@ -483,23 +614,101 @@ function renderTopics(topics) {
 }
 
 // Mode switching
-document.getElementById('tab-url').addEventListener('click', () => {
-  currentMode = 'url';
-  document.getElementById('tab-url').classList.add('active');
-  document.getElementById('tab-pdf').classList.remove('active');
-  document.getElementById('panel-url').style.display = '';
-  document.getElementById('panel-pdf').style.display = 'none';
+const MODES = ['url', 'pdf', 'question'];
+
+function setMode(mode) {
+  currentMode = mode;
+  MODES.forEach(m => {
+    document.getElementById('tab-' + m).classList.toggle('active', m === mode);
+    document.getElementById('panel-' + m).style.display = m === mode ? '' : 'none';
+  });
+  document.getElementById('q-examples').style.display = mode === 'question' ? '' : 'none';
+  hideGuardNotice();
   setStatus('');
+}
+
+MODES.forEach(m => document.getElementById('tab-' + m).addEventListener('click', () => setMode(m)));
+
+/* ── Question input: counter, examples, guardrail notice ── */
+const MAX_Q = 500;
+const MIN_Q = 12;
+const qInput = document.getElementById('question-input');
+
+qInput.addEventListener('input', () => {
+  const n = qInput.value.trim().length;
+  const el = document.getElementById('q-count');
+  el.textContent = `${n} / ${MAX_Q}`;
+  el.classList.toggle('over', n > MAX_Q);
+  hideGuardNotice();
 });
 
-document.getElementById('tab-pdf').addEventListener('click', () => {
-  currentMode = 'pdf';
-  document.getElementById('tab-pdf').classList.add('active');
-  document.getElementById('tab-url').classList.remove('active');
-  document.getElementById('panel-pdf').style.display = '';
-  document.getElementById('panel-url').style.display = 'none';
-  setStatus('');
+document.querySelectorAll('.q-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    qInput.value = chip.textContent.trim();
+    qInput.dispatchEvent(new Event('input'));
+    qInput.focus();
+  });
 });
+
+function hideGuardNotice() {
+  const el = document.getElementById('guard-notice');
+  el.style.display = 'none';
+  el.innerHTML = '';
+}
+
+function showGuardNotice(message, rewrite) {
+  const el = document.getElementById('guard-notice');
+  el.innerHTML = `<p>${escapeHtml(message)}</p>`;
+  if (rewrite) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'guard-rewrite';
+    btn.textContent = '↻ ' + rewrite;
+    btn.addEventListener('click', () => {
+      qInput.value = rewrite;
+      qInput.dispatchEvent(new Event('input'));
+      qInput.focus();
+    });
+    el.appendChild(btn);
+  }
+  el.style.display = 'block';
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/* Local throttle. It stops accidental hammering and casual abuse from one
+   browser; it is not a security boundary — the server-side triage is. */
+const RATE_KEY = 'hravuta_q_times';
+const RATE_MAX = 12;
+const RATE_WINDOW_MS = 60 * 60 * 1000;
+
+function rateLimited() {
+  let times;
+  try { times = JSON.parse(localStorage.getItem(RATE_KEY)) || []; } catch { times = []; }
+  const now = Date.now();
+  times = times.filter(t => now - t < RATE_WINDOW_MS);
+  if (times.length >= RATE_MAX) return true;
+  times.push(now);
+  localStorage.setItem(RATE_KEY, JSON.stringify(times));
+  return false;
+}
+
+async function triageQuestion(question) {
+  const res = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, part: 'triage' })
+  });
+  if (!res.ok) {
+    let msg = `Server error (${res.status}). Please try again.`;
+    try { const err = await res.json(); if (err.error) msg = err.error; } catch {}
+    throw new Error(msg);
+  }
+  return await res.json();
+}
 
 // PDF file selection — text is extracted in the browser
 document.getElementById('pdf-input').addEventListener('change', async (e) => {
@@ -547,7 +756,10 @@ document.getElementById('pdf-input').addEventListener('change', async (e) => {
 document.getElementById('url-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  hideGuardNotice();
+
   let fetchBody, displayRef, statusMsg;
+  const isQuestion = currentMode === 'question';
 
   if (currentMode === 'url') {
     const url = document.getElementById('url-input').value.trim();
@@ -555,22 +767,37 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
     fetchBody = { url };
     displayRef = url;
     statusMsg = 'Reading the article and consulting Jewish texts… (~10 seconds)';
-  } else {
+  } else if (currentMode === 'pdf') {
     if (!pdfData) { setStatus('Please choose a PDF file first.', true); return; }
     fetchBody = { text: pdfData.text, filename: pdfData.filename };
     displayRef = pdfData.filename;
     statusMsg = 'Reading the PDF and consulting Jewish texts… (~15 seconds)';
+  } else {
+    const q = qInput.value.trim().replace(/\s+/g, ' ');
+    if (q.length < MIN_Q) { setStatus('Please write a slightly fuller question.', true); return; }
+    if (q.length > MAX_Q) { setStatus(`Please keep the question under ${MAX_Q} characters.`, true); return; }
+    if (rateLimited()) {
+      setStatus('That is a lot of questions in one hour. Please come back a little later.', true);
+      return;
+    }
+    fetchBody = { question: q };
+    displayRef = q;
+    statusMsg = 'Consulting modern and progressive Jewish thought… (~15 seconds)';
   }
 
-  const activeBtn = document.getElementById(currentMode === 'url' ? 'explore-btn' : 'explore-btn-pdf');
+  const activeBtn = document.getElementById(
+    currentMode === 'url' ? 'explore-btn' : currentMode === 'pdf' ? 'explore-btn-pdf' : 'explore-btn-q'
+  );
+  const cardPart = isQuestion ? 'voices' : 'topics';
+
   activeBtn.disabled = true;
   document.getElementById('results').style.display = 'none';
   setStatus(statusMsg);
 
-  const progress = { commentary: 0, topics: 0 };
+  const progress = { commentary: 0, [cardPart]: 0 };
   const updateProgress = () => {
-    const total = progress.commentary + progress.topics;
-    setStatus(`Claude is writing the commentary… (${total.toLocaleString()} characters)`);
+    const total = progress.commentary + progress[cardPart];
+    setStatus(`Claude is writing… (${total.toLocaleString()} characters)`);
   };
 
   async function streamPart(part) {
@@ -612,24 +839,45 @@ document.getElementById('url-form').addEventListener('submit', async (e) => {
   }
 
   try {
-    // Run both halves in parallel: the essay (Sonnet) and the topic cards (Haiku)
-    const [commentaryRes, topicsRes] = await Promise.allSettled([
+    // Guardrail: a cheap triage pass decides whether the question is one this
+    // page can answer, before any expensive generation starts.
+    if (isQuestion) {
+      setStatus('Reading the question…');
+      const verdict = await triageQuestion(fetchBody.question);
+      if (verdict.verdict !== 'ok') {
+        setStatus('');
+        showGuardNotice(
+          verdict.message || 'This page answers questions about Jewish thought, texts and practice. Try asking one of those.',
+          verdict.rewrite
+        );
+        return;
+      }
+      setStatus(statusMsg);
+    }
+
+    // Run both halves in parallel: the essay and the structured cards
+    const [commentaryRes, cardsRes] = await Promise.allSettled([
       streamPart('commentary'),
-      streamPart('topics')
+      streamPart(cardPart)
     ]);
 
     if (commentaryRes.status === 'rejected') throw commentaryRes.reason;
 
     const data = { ...commentaryRes.value.parsed };
-    data.title = (commentaryRes.value.meta && commentaryRes.value.meta.title) || data.headline || 'Document';
-    data.topics = topicsRes.status === 'fulfilled' && Array.isArray(topicsRes.value.parsed.topics)
-      ? topicsRes.value.parsed.topics
+    data.mode = isQuestion ? 'question' : 'article';
+    data.title = isQuestion
+      ? displayRef
+      : ((commentaryRes.value.meta && commentaryRes.value.meta.title) || data.headline || 'Document');
+
+    const cards = cardsRes.status === 'fulfilled' && Array.isArray(cardsRes.value.parsed[cardPart])
+      ? cardsRes.value.parsed[cardPart]
       : [];
+    data[cardPart] = cards;
 
     // Fetch supporting passages from Sefaria (directly from the browser)
-    if (data.topics.length) {
-      setStatus('Finding supporting texts on Sefaria…');
-      await attachSefariaPassages(data.topics);
+    if (cards.length) {
+      setStatus('Finding the classical texts on Sefaria…');
+      await attachSefariaPassages(cards);
     }
 
     saveToHistory(displayRef, data);
@@ -674,9 +922,9 @@ async function fetchSefariaText(ref) {
   } catch { return null; }
 }
 
-async function attachSefariaPassages(topics) {
-  await Promise.all(topics.map(async (t) => {
-    const hits = await searchSefaria(t.sefaria_query || t.concept);
+async function attachSefariaPassages(cards) {
+  await Promise.all(cards.map(async (t) => {
+    const hits = await searchSefaria(t.sefaria_query || t.concept || t.stream);
     const refs = hits.slice(0, 2)
       .map(h => (h._source && h._source.ref) || h._id || '')
       .map(r => String(r).replace(/\s*\(.*?\)\s*$/, '').trim())
